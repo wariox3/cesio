@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 class ApiGuiaController extends FOSRestController
 {
     /**
-     * @Rest\Get("/api/localizador/guia/estado/{codigoGuia}", name="api_localizador_guia_estado")
+     * @Rest\Get("/api/localizador/guia/estado/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_estado")
      */
-    public function guia(Request $request, $codigoGuia)
+    public function guia(Request $request, $codigoOperador, $codigoGuia)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
