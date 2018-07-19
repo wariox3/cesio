@@ -18,7 +18,10 @@ class ApiGuiaController extends FOSRestController
         ini_set("memory_limit", -1);
 
         $prueba = array();
-        $prueba[] = array('estadoRecibido' => "SI", 'estadoEmbarcado' => "SI", 'estadoDespachado' => "NO");
+        $prueba[] = array('estado' => "bodega", 'valor' => "SI", 'fecha' => "...");
+        $prueba[] = array('estado' => "embarque", 'valor' => "SI", 'fecha' => "...");
+        $prueba[] = array('estado' => "despacho", 'valor' => "SI", 'fecha' => "...");
+        $prueba[] = array('estado' => "entrega", 'valor' => "SI", 'fecha' => "...");
         return $prueba;
     }
 
