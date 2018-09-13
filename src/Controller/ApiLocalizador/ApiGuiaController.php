@@ -13,7 +13,7 @@ class ApiGuiaController extends FOSRestController
     /**
      * @Rest\Get("/api/localizador/guia/estado/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_estado")
      */
-    public function guia(Request $request, $codigoOperador, $codigoGuia)
+    public function estado(Request $request, $codigoOperador, $codigoGuia)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
@@ -27,5 +27,26 @@ class ApiGuiaController extends FOSRestController
         $response = curl_exec($ch);
         $arrEstados = json_decode($response, true);
         return $arrEstados;
+    }
+
+    /**
+     * @Rest\Post("/api/localizador/guia/cumplido/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_cumplido")
+     */
+    public function cumplido(Request $request, $codigoOperador, $codigoGuia)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $direccion = $arOperador->getUrlServicio();
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/registro/masivo/1',
+            CURLOPT_URL => $direccion . '/documental/api/registro/masivo/guia/' . $codigoGuia,
+        ));
+        $resp = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+
+        return $resp;
     }
 }
