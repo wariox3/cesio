@@ -41,8 +41,8 @@ class ApiGuiaController extends FOSRestController
         curl_setopt_array($curl, array(
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POST => 1,
-            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/registro/masivo/1',
-            CURLOPT_URL => $direccion . '/documental/api/masivo/masivo/guia/' . $codigoGuia,
+            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
+            CURLOPT_URL => $direccion . '/documental/api/masivo/masivo/tte_guia/' . $codigoGuia,
         ));
         $resp = json_decode(curl_exec($curl), true);
         curl_close($curl);
