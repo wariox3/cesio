@@ -21,7 +21,7 @@ class ApiGuiaController extends FOSRestController
         $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/guia/consulta/$codigoGuia");
+        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/consulta/$codigoGuia");
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);

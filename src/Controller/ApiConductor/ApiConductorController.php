@@ -22,7 +22,7 @@ class ApiConductorController extends FOSRestController
         $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/guia/despacho/$codigoDespacho");
+        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/despacho/$codigoDespacho");
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
@@ -32,13 +32,26 @@ class ApiConductorController extends FOSRestController
         } else {
             return $arrGuias['guias'];
         }
-        //return $arrGuias;
-
-        /*$prueba = array();
-        $prueba[] = array('codigoGuiaPk' => 11111);
-        $prueba[] = array('codigoGuiaPk' => 22222);
-        return $prueba;*/
     }
 
+    /**
+     * @Rest\Get("/api/conductor/guia/entrega/{codigoOperador}/{codigoGuia}/{fecha}/{hora}/{usuario}", name="api_conductor_guia_entrega")
+     */
+    public function guiaEntrega(Request $request, $codigoOperador, $codigoGuia, $fecha, $hora, $usuario)
+    {
+
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $direccion = $arOperador->getUrlServicio();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/entrega/$codigoGuia/$fecha/$hora/$usuario");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        $respuesta = json_decode($response, true);
+        return $respuesta;
+    }
 
 }
