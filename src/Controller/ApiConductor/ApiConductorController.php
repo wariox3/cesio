@@ -4,12 +4,38 @@ namespace App\Controller\ApiConductor;
 
 
 use App\Entity\Operador;
+use App\Entity\Usuario;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 
 class ApiConductorController extends FOSRestController
 {
+    /**
+     * @Rest\Get("/api/conductor/autenticar/{usuario}/{clave}", name="api_conductor_autenticar")
+     */
+    public function autenticar(Request $request, $usuario, $clave)
+    {
+
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+
+        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(array('usuario'=> $usuario, 'clave' => $clave));
+        if($arUsuario) {
+            return [
+                'autenticar' => true,
+                'operador' => $arUsuario->getCodigoOperadorFk(),
+                'mensaje' => "Correcto"
+            ];
+        } else {
+            return [
+                'autenticar' => false,
+                'mensaje' => "Datos errados"
+            ];
+        }
+    }
+
     /**
      * @Rest\Get("/api/conductor/despacho/guias/{codigoOperador}/{codigoDespacho}", name="api_conductor_despacho_guias")
      */
