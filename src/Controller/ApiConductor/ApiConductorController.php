@@ -80,4 +80,20 @@ class ApiConductorController extends FOSRestController
         return $respuesta;
     }
 
+    /**
+     * @Rest\Post("/api/conductor/guia/captura/{codigoOperador}/{codigoGuia}", name="api_conductor_guia_captura")
+     */
+    public function guiaCaptura(Request $request, $codigoOperador, $codigoGuia)
+    {
+
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $contenido = json_decode($request->getContent(),true);
+        $strImagen = $contenido['imageString'];
+        $Base64Img = base64_decode($strImagen);
+        file_put_contents('/bandeja/unodepiera.jpg', $Base64Img);
+        return ['hola' => $contenido];
+    }
+
 }
