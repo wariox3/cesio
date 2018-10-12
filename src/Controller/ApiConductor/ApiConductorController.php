@@ -86,6 +86,19 @@ class ApiConductorController extends FOSRestController
     public function guiaCaptura(Request $request, $codigoOperador, $codigoGuia)
     {
 
+        /*
+         *
+         * Consumir esta api, ya gestiona toda la logica
+         * interna solo es enviarle el body de este servicio al
+         * servicio local crear el jpg en temporal y ya esta
+         * el otro codigo
+         *
+         *
+         *
+         *
+         */
+
+
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
