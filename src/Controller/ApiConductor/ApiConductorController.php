@@ -129,4 +129,24 @@ class ApiConductorController extends FOSRestController
         return $respuesta;
     }
 
+    /**
+     * @Rest\Get("/api/conductor/monitoreo/registro/{codigoOperador}/{codigoDespacho}/{latitud}/{longitud}/{usuario}", name="api_conductor_monitoreo_registro")
+     */
+    public function monitoreoRegistro(Request $request, $codigoOperador, $codigoDespacho, $latitud, $longitud, $usuario)
+    {
+
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $direccion = $arOperador->getUrlServicio();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/monitoreo/registro/$codigoDespacho/$latitud/$longitud");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        $respuesta = json_decode($response, true);
+        return $respuesta;
+    }
+
 }
