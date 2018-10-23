@@ -109,4 +109,24 @@ class ApiConductorController extends FOSRestController
         return ['hola' => $contenido];
     }
 
+    /**
+     * @Rest\Get("/api/conductor/guia/novedad/{codigoOperador}/{codigoGuia}/{fecha}/{hora}/{usuario}/{codigoNovedad}", name="api_conductor_guia_novedad")
+     */
+    public function guiaNovedad(Request $request, $codigoOperador, $codigoGuia, $fecha, $hora, $usuario, $codigoNovedad)
+    {
+
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $direccion = $arOperador->getUrlServicio();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/novedad/$codigoGuia/$fecha/$hora/$usuario/$codigoNovedad");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        $respuesta = json_decode($response, true);
+        return $respuesta;
+    }
+
 }
