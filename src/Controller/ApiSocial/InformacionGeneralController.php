@@ -27,6 +27,8 @@ final class InformacionGeneralController
 
     }
 
+
+
 //    /**
 //     * @param $username SocUsuario
 //     */

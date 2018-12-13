@@ -32,15 +32,22 @@ class SocUsuarioAmigo
     private $fechaAgregado;
 
     /**
-     * @ORM\Column(name="estado_amistad", type="boolean", options={"default":true})
+     * @ORM\Column(name="estado", type="string", options={"default":true})
      */
-    private $estadoAmistad;
+    private $estado;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SocUsuario", inversedBy="usuarioAmigoRel")
      * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="codigo_usuario_pk")
      */
     protected $usuarioRel;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\SocUsuario", inversedBy="usuarioEsAmigoRel")
+     * @ORM\JoinColumn(name="codigo_usuario_es_amigo_fk", referencedColumnName="codigo_usuario_pk")
+     */
+    protected $usuarioAmigoRel;
 
     /**
      * @return mixed
@@ -113,17 +120,17 @@ class SocUsuarioAmigo
     /**
      * @return mixed
      */
-    public function getEstadoAmistad()
+    public function getEstado()
     {
-        return $this->estadoAmistad;
+        return $this->estado;
     }
 
     /**
      * @param mixed $estadoAmistad
      */
-    public function setEstadoAmistad($estadoAmistad)
+    public function setEstado($estado)
     {
-        $this->estadoAmistad = $estadoAmistad;
+        $this->estado= $estado;
         return $this;
     }
 
@@ -141,6 +148,23 @@ class SocUsuarioAmigo
     public function setUsuarioRel($usuarioRel)
     {
         $this->usuarioRel = $usuarioRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuarioAmigoRel()
+    {
+        return $this->usuarioAmigoRel;
+    }
+
+    /**
+     * @param mixed $usuarioAmigoRel
+     */
+    public function setUsuarioAmigoRel($usuarioAmigoRel)
+    {
+        $this->usuarioAmigoRel = $usuarioAmigoRel;
         return $this;
     }
 

@@ -17,6 +17,11 @@ class SocUsuario
     private $codigoUsuarioPk;
 
     /**
+     * @ORM\Column(name="nombre_corto", type="string",length=120)
+     */
+    private $nombreCorto;
+
+    /**
      * @ORM\Column(name="clave", type="string", length=64)
      */
     private $clave;
@@ -55,6 +60,11 @@ class SocUsuario
      * @ORM\OneToMany(targetEntity="App\Entity\SocSolicitud", mappedBy="usuarioSolicitadoRel", cascade={"remove","persist"})
      */
     protected $solicitadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SocUsuarioAmigo", mappedBy="usuarioAmigoRel", cascade={"remove","persist"})
+     */
+    protected $usuarioEsAmigoRel;
 
 
 
@@ -245,6 +255,38 @@ class SocUsuario
     public function setClave($clave)
     {
         $this->clave = $clave;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }/**
+ * @param mixed $nombreCorto
+ */
+    public function setNombreCorto($nombreCorto)
+    {
+        $this->nombreCorto = $nombreCorto;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuarioEsAmigoRel()
+    {
+        return $this->usuarioEsAmigoRel;
+    }
+
+    /**
+     * @param mixed $usuarioEsAmigoRel
+     */
+    public function setUsuarioEsAmigoRel($usuarioEsAmigoRel)
+    {
+        $this->usuarioEsAmigoRel = $usuarioEsAmigoRel;
         return $this;
     }
 

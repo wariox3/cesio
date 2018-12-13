@@ -19,6 +19,8 @@ class SocUsuarioAmigoRepository extends ServiceEntityRepository
         parent::__construct($registry, SocUsuarioAmigo::class);
     }
 
+
+
     // /**
     //  * @return SocUsuarioAmigo[] Returns an array of SocUsuarioAmigo objects
     //  */

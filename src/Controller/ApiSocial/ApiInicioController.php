@@ -22,7 +22,7 @@ class ApiInicioController extends AbstractController
         $arUsuario=InformacionGeneralController::usuarioExistente($username);
         $estadoConexionDeUsuario=false;
         if($arUsuario){
-            if(isset($datos['data']['estado'])){
+            if(isset($datos['datos']['estado'])){
                 $estadoConexionDeUsuario=$arUsuario->getEstadoConexion();
             }
             else{
@@ -33,10 +33,10 @@ class ApiInicioController extends AbstractController
             }
         }
         else{
-            if(isset($datos['data']) && !isset($datos['data']['estado'])){
+            if(isset($datos['datos']) && !isset($datos['datos']['estado'])){
                 $arUsuario=(new SocUsuario())
                     ->setCodigoUsuarioPk($username)
-                    ->setClave($datos['data']['clave'])
+                    ->setClave($datos['datos']['clave'])
                     ->setEstadoConexion(true)
                     ->setEstadoCuenta(true);
             }
