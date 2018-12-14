@@ -33,7 +33,7 @@ class ComUsuarioAmigoRepository extends ServiceEntityRepository
         return $arUsuarioAmigoSolicitud;
     }
 
-    public function misAmigos($usuario){
+    public function misAmigos($usuario, $dato){
         $em=$this->getEntityManager();
         $arUsuarioAmigo=$em->createQueryBuilder()
             ->from('App\Entity\ComUsuarioAmigo','ua')
@@ -55,8 +55,11 @@ class ComUsuarioAmigoRepository extends ServiceEntityRepository
                     END         
                 ) as username
             ")
-            ->where("ua.estado='amigo'")
-            ->getQuery()->getResult();
+            ->where("ua.estado='amigo'");
+            if(isset($dato['datos']['maximo_resultado'])){
+                $arUsuarioAmigo=$arUsuarioAmigo->setMaxResults($dato['datos']['maximo_resultado']);
+            }
+            $arUsuarioAmigo=$arUsuarioAmigo->getQuery()->getResult();
 
         return $arUsuarioAmigo;
     }

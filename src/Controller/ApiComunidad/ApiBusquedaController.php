@@ -6,6 +6,7 @@ use App\Entity\SocSolicitud;
 use App\Entity\ComUsuarioAmigo;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use http\Env\Request;
 
 class ApiBusquedaController extends FOSRestController
 {
@@ -159,12 +160,14 @@ class ApiBusquedaController extends FOSRestController
 
 
     /**
-     * @Rest\Get("/api/social/misAmigos/{usernameSolicitante}", name="api_social_misAmigos")
+     * @Rest\Post("/api/social/misAmigos/{usernameSolicitante}", name="api_social_misAmigos")
      */
-    public function misAmigos($usernameSolicitante){
+    public function misAmigos(\Symfony\Component\HttpFoundation\Request $request,$usernameSolicitante){
         try{
+            $dato=json_decode($request->getContent(),true);
             $em=$this->getDoctrine()->getManager();
-            $datos=$em->getRepository('App\Entity\ComUsuarioAmigo')->misAmigos($usernameSolicitante);
+
+            $datos=$em->getRepository('App\Entity\ComUsuarioAmigo')->misAmigos($usernameSolicitante,$dato);
 
             return[
                 'estado'=>true,
