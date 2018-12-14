@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocUsuarioAmigoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ComUsuarioAmigoRepository")
  */
-class SocUsuarioAmigo
+class ComUsuarioAmigo
 {
     /**
      * @ORM\Id()
@@ -37,14 +37,14 @@ class SocUsuarioAmigo
     private $estado;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SocUsuario", inversedBy="usuarioAmigoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\ComUsuario", inversedBy="usuarioAmigoRel")
      * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="codigo_usuario_pk")
      */
     protected $usuarioRel;
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SocUsuario", inversedBy="usuarioEsAmigoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\ComUsuario", inversedBy="usuarioEsAmigoRel")
      * @ORM\JoinColumn(name="codigo_usuario_es_amigo_fk", referencedColumnName="codigo_usuario_pk")
      */
     protected $usuarioAmigoRel;

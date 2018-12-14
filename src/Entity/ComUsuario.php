@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocUsuarioRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ComUsuarioRepository")
  */
-class SocUsuario
+class ComUsuario
 {
     /**
      * @ORM\Id()
@@ -47,22 +47,14 @@ class SocUsuario
     private $acercaDeMi;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocUsuarioAmigo", mappedBy="usuarioRel", cascade={"remove","persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ComUsuarioAmigo", mappedBy="usuarioRel", cascade={"remove","persist"})
      */
     protected $usuarioAmigoRel;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocSolicitud", mappedBy="usuarioSolicitanteRel", cascade={"remove","persist"})
-     */
-    protected $solicitanteRel;
+
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocSolicitud", mappedBy="usuarioSolicitadoRel", cascade={"remove","persist"})
-     */
-    protected $solicitadoRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocUsuarioAmigo", mappedBy="usuarioAmigoRel", cascade={"remove","persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ComUsuarioAmigo", mappedBy="usuarioAmigoRel", cascade={"remove","persist"})
      */
     protected $usuarioEsAmigoRel;
 
@@ -137,75 +129,7 @@ class SocUsuario
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAmigoRel()
-    {
-        return $this->amigoRel;
-    }
 
-    /**
-     * @param mixed $amigoRel
-     */
-    public function setAmigoRel($amigoRel)
-    {
-        $this->amigoRel = $amigoRel;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSolicitanteRel()
-    {
-        return $this->solicitanteRel;
-    }
-
-    /**
-     * @param mixed $solicitanteRel
-     */
-    public function setSolicitanteRel($solicitanteRel)
-    {
-        $this->solicitanteRel = $solicitanteRel;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSolicitadoRel()
-    {
-        return $this->solicitadoRel;
-    }
-
-    /**
-     * @param mixed $solicitadoRel
-     */
-    public function setSolicitadoRel($solicitadoRel)
-    {
-        $this->solicitadoRel = $solicitadoRel;
-        return $this;
-    }
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getUsuarioRel()
-    {
-        return $this->usuarioRel;
-    }
-
-    /**
-     * @param mixed $usuarioRel
-     */
-    public function setUsuarioRel($usuarioRel)
-    {
-        $this->usuarioRel = $usuarioRel;
-        return $this;
-    }
 
     /**
      * @return mixed

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\ApiSocial;
+namespace App\Controller\ApiComunidad;
 
-use App\Entity\SocUsuario;
+use App\Entity\ComUsuario;
 use App\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +13,7 @@ class ApiInicioController extends AbstractController
 {
     /**
      * @Rest\Post("/api/social/conexion/{username}", name="api_social_conexion")
-     * @param $arUsuario SocUsuario
+     * @param $arUsuario ComUsuario
      */
     public function conexion(Request $request,$username)
     {
@@ -34,9 +34,10 @@ class ApiInicioController extends AbstractController
         }
         else{
             if(isset($datos['datos']) && !isset($datos['datos']['estado'])){
-                $arUsuario=(new SocUsuario())
+                $arUsuario=(new ComUsuario())
                     ->setCodigoUsuarioPk($username)
                     ->setClave($datos['datos']['clave'])
+                    ->setNombreCorto($datos['datos']['nombreCorto'])
                     ->setEstadoConexion(true)
                     ->setEstadoCuenta(true);
             }

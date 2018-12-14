@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\ApiSocial;
+namespace App\Controller\ApiComunidad;
 
-use App\Entity\SocUsuario;
+use App\Entity\ComUsuario;
 use App\BaseDatos;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +22,7 @@ final class InformacionGeneralController
     public static function usuarioExistente($username)
     {
         $em=BaseDatos::getEm();
-        $arUsuario=$em->getRepository('App\Entity\SocUsuario')->find($username);
+        $arUsuario=$em->getRepository('App\Entity\ComUsuario')->find($username);
         return $arUsuario;
 
     }
@@ -30,11 +30,11 @@ final class InformacionGeneralController
 
 
 //    /**
-//     * @param $username SocUsuario
+//     * @param $username ComUsuario
 //     */
 //    public static function cambiarEstadoConexionUsuario($username, $estadoConexion){
 //        $em=BaseDatos::getEm();
-//        $arUsuario=$em->getRepository('App\Entity\SocUsuario')->find($username);
+//        $arUsuario=$em->getRepository('App\Entity\ComUsuario')->find($username);
 //        if($arUsuario){
 //            $arUsuario->getEstadoConexion($estadoConexion);
 //        }

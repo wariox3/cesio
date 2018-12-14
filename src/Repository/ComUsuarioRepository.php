@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\SocUsuario;
+use App\Entity\ComUsuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method SocUsuario|null find($id, $lockMode = null, $lockVersion = null)
- * @method SocUsuario|null findOneBy(array $criteria, array $orderBy = null)
- * @method SocUsuario[]    findAll()
- * @method SocUsuario[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ComUsuario|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ComUsuario|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ComUsuario[]    findAll()
+ * @method ComUsuario[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SocUsuarioRepository extends ServiceEntityRepository
+class ComUsuarioRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, SocUsuario::class);
+        parent::__construct($registry, ComUsuario::class);
     }
 
     public function lista($palabraClave, $usuario)
@@ -24,7 +24,7 @@ class SocUsuarioRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
 
         $arSocUsuario = $em->createQueryBuilder()
-            ->from('App\Entity\SocUsuario', 'su')
+            ->from('App\Entity\ComUsuario', 'su')
             ->leftJoin('su.usuarioEsAmigoRel', 'ua')
             ->leftJoin('su.usuarioAmigoRel', 'ui')
             ->select('su.codigoUsuarioPk as username')
@@ -66,7 +66,7 @@ class SocUsuarioRepository extends ServiceEntityRepository
 
 
     // /**
-    //  * @return SocUsuario[] Returns an array of SocUsuario objects
+    //  * @return ComUsuario[] Returns an array of ComUsuario objects
     //  */
     /*
     public function findByExampleField($value)
@@ -83,7 +83,7 @@ class SocUsuarioRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?SocUsuario
+    public function findOneBySomeField($value): ?ComUsuario
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')
