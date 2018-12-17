@@ -44,9 +44,14 @@ class ComPublicacion
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\ComUsuario", inversedBy="publicacionComUsuarioRel")
-     * @ORM\JoinColumn(name="codigo_usuario_es_amigo_fk", referencedColumnName="codigo_usuario_pk")
+     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="codigo_usuario_pk")
      */
     protected $usuarioRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ComComentario", mappedBy="publicacionRel", cascade={"persist","remove"})
+     */
+    protected $comentarioPublicacionRel;
 
     /**
      * @return mixed
@@ -155,16 +160,35 @@ class ComPublicacion
      */
     public function getUsuarioRel()
     {
-        return $this->UsuarioRel;
+        return $this->usuarioRel;
     }
 
     /**
      * @param mixed $UsuarioRel
      */
-    public function setUsuarioRel($UsuarioRel)
+    public function setUsuarioRel($usuarioRel)
     {
-        $this->UsuarioRel = $UsuarioRel;
+        $this->usuarioRel = $usuarioRel;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarioPublicacionRel()
+    {
+        return $this->comentarioPublicacionRel;
+    }
+
+    /**
+     * @param mixed $comentarioPublicacionRel
+     */
+    public function setComentarioPublicacionRel($comentarioPublicacionRel)
+    {
+        $this->comentarioPublicacionRel = $comentarioPublicacionRel;
+        return $this;
+    }
+
+
 
 }

@@ -19,6 +19,35 @@ class ComPublicacionRepository extends ServiceEntityRepository
         parent::__construct($registry, ComPublicacion::class);
     }
 
+    public function listaMisPublicaciones($usuario){
+        $em=$this->getEntityManager();
+        $arPublicaciones=$em->createQueryBuilder()
+            ->from('App\Entity\ComPublicacion','p')
+            ->addSelect("p.codigoPublicacionPk as publicacion")
+            ->addSelect("p.textoPublicacion as texto")
+            ->addSelect("p.fecha")
+            ->addSelect("p.meGusta")
+            ->addSelect("p.totalComentarios")
+            ->andWhere("p.codigoUsuarioFk='{$usuario}'")
+            ->getQuery()->getResult();
+
+        for ($i=0;$i<count($arPublicaciones); $i++){
+            $arComentarios=$em->createQueryBuilder()
+                ->from('App\Entity\ComComentario','c')
+                ->select('c.codigoComentarioPk as comentario')
+                ->addSelect('c.texto_comentario as texto')
+                ->addSelect('c.fecha')
+                ->addSelect('c.meGusta')
+                ->andWhere("c.codigoPadreFk IS NULL")
+                ->andWhere("c.codigoPublicacionFk={$arPublicaciones[$i]['publicacion']}")
+                ->setMaxResults(2)
+                ->getQuery()->getResult();
+            $arPublicaciones[$i]['comentarios']=$arComentarios;
+
+        }
+        return $arPublicaciones;
+    }
+
     // /**
     //  * @return ComPublicacion[] Returns an array of ComPublicacion objects
     //  */
