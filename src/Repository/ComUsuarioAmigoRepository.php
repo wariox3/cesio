@@ -22,7 +22,7 @@ class ComUsuarioAmigoRepository extends ServiceEntityRepository
     public function solicitudAmigos($usuario){
         $em=$this->getEntityManager();
         $arUsuarioAmigoSolicitud=$em->createQueryBuilder()
-            ->from('ComUsuarioAmigo.php','ua')
+            ->from('App\Entity\ComUsuarioAmigo','ua')
             ->join('ua.usuarioRel','u')
             ->select("u.nombreCorto as nombre")
             ->addSelect("u.codigoUsuarioPk as username")

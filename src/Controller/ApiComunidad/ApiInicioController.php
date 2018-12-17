@@ -12,7 +12,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 class ApiInicioController extends AbstractController
 {
     /**
-     * @Rest\Post("/api/social/conexion/{username}", name="api_social_conexion")
+     * @Rest\Post("/api/comunidad/conexion/{username}", name="api_comunidad_conexion")
      * @param $arUsuario ComUsuario
      */
     public function conexion(Request $request,$username)

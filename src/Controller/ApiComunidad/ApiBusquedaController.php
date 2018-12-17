@@ -11,7 +11,7 @@ use http\Env\Request;
 class ApiBusquedaController extends FOSRestController
 {
     /**
-     * @Rest\Get("/api/social/busqueda/{username}/{palabraClave}", name="api_social_busqueda")
+     * @Rest\Get("/api/comunidad/busqueda/{username}/{palabraClave}", name="api_comunidad_busqueda")
      */
     public function busqueda($username, $palabraClave)
     {
@@ -26,7 +26,7 @@ class ApiBusquedaController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/api/social/enviarSolicitud/{usernameSolicitante}/{usernameSolicitado}", name="api_social_enviarSolicitud")
+     * @Rest\Get("/api/comunidad/enviarSolicitud/{usernameSolicitante}/{usernameSolicitado}", name="api_comunidad_enviarSolicitud")
      */
     public function agregarSolicitud($usernameSolicitante, $usernameSolicitado)
     {
@@ -55,7 +55,7 @@ class ApiBusquedaController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/api/social/eliminarAmigo/{usernameSolicitante}/{usernameSolicitado}", name="api_social_eliminarAmigo")
+     * @Rest\Get("/api/comunidad/eliminarAmigo/{usernameSolicitante}/{usernameSolicitado}", name="api_comunidad_eliminarAmigo")
      */
     public function eliminarAmigo($usernameSolicitante, $usernameSolicitado)
     {
@@ -81,7 +81,7 @@ class ApiBusquedaController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/api/social/aceptarAmigo/{usernameSolicitante}/{usernameSolicitado}", name="api_social_aceptarAmigo")
+     * @Rest\Get("/api/comunidad/aceptarAmigo/{usernameSolicitante}/{usernameSolicitado}", name="api_comunidad_aceptarAmigo")
      */
     public function agregarAmigo($usernameSolicitante, $usernameSolicitado)
     {
@@ -111,7 +111,7 @@ class ApiBusquedaController extends FOSRestController
 
 
     /**
-     * @Rest\Get("/api/social/cancelarSolicitud/{usernameSolicitante}/{usernameSolicitado}", name="api_social_cancelarSolicitud")
+     * @Rest\Get("/api/comunidad/cancelarSolicitud/{usernameSolicitante}/{usernameSolicitado}", name="api_comunidad_cancelarSolicitud")
      */
     public function cancelarSolicitud($usernameSolicitante, $usernameSolicitado)
     {
@@ -137,7 +137,7 @@ class ApiBusquedaController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/api/social/solicitudesPendientes/{usernameSolicitante}", name="api_social_solicitudesPendientes")
+     * @Rest\Get("/api/comunidad/solicitudesPendientes/{usernameSolicitante}", name="api_comunidad_solicitudesPendientes")
      */
     public function misSolicitudesRecibidas($usernameSolicitante){
         try{
@@ -160,7 +160,7 @@ class ApiBusquedaController extends FOSRestController
 
 
     /**
-     * @Rest\Post("/api/social/misAmigos/{usernameSolicitante}", name="api_social_misAmigos")
+     * @Rest\Post("/api/comunidad/misAmigos/{usernameSolicitante}", name="api_comunidad_misAmigos")
      */
     public function misAmigos(\Symfony\Component\HttpFoundation\Request $request,$usernameSolicitante){
         try{

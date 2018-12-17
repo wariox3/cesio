@@ -52,13 +52,15 @@ class ComUsuario
     protected $usuarioAmigoRel;
 
 
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ComUsuarioAmigo", mappedBy="usuarioAmigoRel", cascade={"remove","persist"})
      */
     protected $usuarioEsAmigoRel;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ComPublicacion", mappedBy="usuarioRel", cascade={"remove","persist"})
+     */
+    protected $publicacionComUsuarioRel;
 
     /**
      * @return mixed
@@ -211,6 +213,23 @@ class ComUsuario
     public function setUsuarioEsAmigoRel($usuarioEsAmigoRel)
     {
         $this->usuarioEsAmigoRel = $usuarioEsAmigoRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicacionComUsuario()
+    {
+        return $this->publicacionComUsuario;
+    }
+
+    /**
+     * @param mixed $publicacionComUsuario
+     */
+    public function setPublicacionComUsuario($publicacionComUsuario)
+    {
+        $this->publicacionComUsuario = $publicacionComUsuario;
         return $this;
     }
 
