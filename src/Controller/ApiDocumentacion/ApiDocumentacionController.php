@@ -37,4 +37,16 @@ class ApiDocumentacionController extends AbstractController
         $em->getRepository(DtnTema::class)->calificar($arrDatos);
         return true;
     }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Rest\Post("/api/documentacion/consultarHtml", name="api_documentacion_consultarHtml")
+     */
+    public function consultarHtml(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $arrDatos = json_decode($request->getContent(), true);
+        $contenidoHtml = $em->find(DtnTema::class,$arrDatos['id'])->getContenidoHtml();
+        return $contenidoHtml;
+    }
 }
