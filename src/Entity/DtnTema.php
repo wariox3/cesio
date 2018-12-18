@@ -42,6 +42,11 @@ class DtnTema
     private $url;
 
     /**
+     * @ORM\Column(name="contenido_html", type="text", nullable=true)
+     */
+    private $contenidoHtml;
+
+    /**
      * @ORM\Column(name="fecha_actualizacion", type="date", nullable=true)
      */
     private $fechaActualizacion;
@@ -140,6 +145,22 @@ class DtnTema
     public function setUrl($url): void
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContenidoHtml()
+    {
+        return $this->contenidoHtml;
+    }
+
+    /**
+     * @param mixed $contenidoHtml
+     */
+    public function setContenidoHtml($contenidoHtml): void
+    {
+        $this->contenidoHtml = $contenidoHtml;
     }
 
     /**
