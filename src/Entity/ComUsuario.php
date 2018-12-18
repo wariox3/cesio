@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocUsuarioRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ComUsuarioRepository")
  */
-class SocUsuario
+class ComUsuario
 {
     /**
      * @ORM\Id()
@@ -15,6 +15,11 @@ class SocUsuario
      * @ORM\Column(name="codigo_usuario_pk", type="string", nullable=false, length=100)
      */
     private $codigoUsuarioPk;
+
+    /**
+     * @ORM\Column(name="nombre_corto", type="string",length=120)
+     */
+    private $nombreCorto;
 
     /**
      * @ORM\Column(name="clave", type="string", length=64)
@@ -42,21 +47,20 @@ class SocUsuario
     private $acercaDeMi;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocUsuarioAmigo", mappedBy="usuarioRel", cascade={"remove","persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ComUsuarioAmigo", mappedBy="usuarioRel", cascade={"remove","persist"})
      */
     protected $usuarioAmigoRel;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocSolicitud", mappedBy="usuarioSolicitanteRel", cascade={"remove","persist"})
-     */
-    protected $solicitanteRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocSolicitud", mappedBy="usuarioSolicitadoRel", cascade={"remove","persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ComUsuarioAmigo", mappedBy="usuarioAmigoRel", cascade={"remove","persist"})
      */
-    protected $solicitadoRel;
+    protected $usuarioEsAmigoRel;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ComPublicacion", mappedBy="usuarioRel", cascade={"remove","persist"})
+     */
+    protected $publicacionComUsuarioRel;
 
     /**
      * @return mixed
@@ -127,75 +131,7 @@ class SocUsuario
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAmigoRel()
-    {
-        return $this->amigoRel;
-    }
 
-    /**
-     * @param mixed $amigoRel
-     */
-    public function setAmigoRel($amigoRel)
-    {
-        $this->amigoRel = $amigoRel;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSolicitanteRel()
-    {
-        return $this->solicitanteRel;
-    }
-
-    /**
-     * @param mixed $solicitanteRel
-     */
-    public function setSolicitanteRel($solicitanteRel)
-    {
-        $this->solicitanteRel = $solicitanteRel;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSolicitadoRel()
-    {
-        return $this->solicitadoRel;
-    }
-
-    /**
-     * @param mixed $solicitadoRel
-     */
-    public function setSolicitadoRel($solicitadoRel)
-    {
-        $this->solicitadoRel = $solicitadoRel;
-        return $this;
-    }
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getUsuarioRel()
-    {
-        return $this->usuarioRel;
-    }
-
-    /**
-     * @param mixed $usuarioRel
-     */
-    public function setUsuarioRel($usuarioRel)
-    {
-        $this->usuarioRel = $usuarioRel;
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -245,6 +181,55 @@ class SocUsuario
     public function setClave($clave)
     {
         $this->clave = $clave;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }/**
+ * @param mixed $nombreCorto
+ */
+    public function setNombreCorto($nombreCorto)
+    {
+        $this->nombreCorto = $nombreCorto;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuarioEsAmigoRel()
+    {
+        return $this->usuarioEsAmigoRel;
+    }
+
+    /**
+     * @param mixed $usuarioEsAmigoRel
+     */
+    public function setUsuarioEsAmigoRel($usuarioEsAmigoRel)
+    {
+        $this->usuarioEsAmigoRel = $usuarioEsAmigoRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicacionComUsuario()
+    {
+        return $this->publicacionComUsuario;
+    }
+
+    /**
+     * @param mixed $publicacionComUsuario
+     */
+    public function setPublicacionComUsuario($publicacionComUsuario)
+    {
+        $this->publicacionComUsuario = $publicacionComUsuario;
         return $this;
     }
 

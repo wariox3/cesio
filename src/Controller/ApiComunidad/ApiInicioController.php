@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\ApiSocial;
+namespace App\Controller\ApiComunidad;
 
-use App\Entity\SocUsuario;
+use App\Entity\ComUsuario;
 use App\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,8 +12,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 class ApiInicioController extends AbstractController
 {
     /**
-     * @Rest\Post("/api/social/conexion/{username}", name="api_social_conexion")
-     * @param $arUsuario SocUsuario
+     * @Rest\Post("/api/comunidad/conexion/{username}", name="api_comunidad_conexion")
+     * @param $arUsuario ComUsuario
      */
     public function conexion(Request $request,$username)
     {
@@ -22,7 +22,7 @@ class ApiInicioController extends AbstractController
         $arUsuario=InformacionGeneralController::usuarioExistente($username);
         $estadoConexionDeUsuario=false;
         if($arUsuario){
-            if(isset($datos['data']['estado'])){
+            if(isset($datos['datos']['estado'])){
                 $estadoConexionDeUsuario=$arUsuario->getEstadoConexion();
             }
             else{
@@ -33,10 +33,11 @@ class ApiInicioController extends AbstractController
             }
         }
         else{
-            if(isset($datos['data']) && !isset($datos['data']['estado'])){
-                $arUsuario=(new SocUsuario())
+            if(isset($datos['datos']) && !isset($datos['datos']['estado'])){
+                $arUsuario=(new ComUsuario())
                     ->setCodigoUsuarioPk($username)
-                    ->setClave($datos['data']['clave'])
+                    ->setClave($datos['datos']['clave'])
+                    ->setNombreCorto($datos['datos']['nombreCorto'])
                     ->setEstadoConexion(true)
                     ->setEstadoCuenta(true);
             }
