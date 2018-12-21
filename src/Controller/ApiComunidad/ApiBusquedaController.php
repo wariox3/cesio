@@ -172,6 +172,7 @@ class ApiBusquedaController extends FOSRestController
             return[
                 'estado'=>true,
                 'datos'=>$datos,
+                'numeroAmigos'=>$em->getRepository('App\Entity\ComUsuarioAmigo')->numeroDeAmigos($usernameSolicitante),
             ];
         }
         catch (\Exception $exception){

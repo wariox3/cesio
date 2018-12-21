@@ -64,6 +64,18 @@ class ComUsuarioAmigoRepository extends ServiceEntityRepository
         return $arUsuarioAmigo;
     }
 
+    public function numeroDeAmigos($usernameSolicitante){
+        $em=$this->getEntityManager();
+
+        $amigos=$em->createQueryBuilder()
+            ->from('App\Entity\ComUsuarioAmigo','ua')
+            ->select('COUNT(ua.codigoUsuarioAmigoPk) as amigos')
+            ->where("ua.codigoUsuarioFk='{$usernameSolicitante}' OR ua.codigoUsuarioEsAmigoFk='{$usernameSolicitante}'")
+            ->getQuery()->getSingleResult();
+
+        return $amigos['amigos'];
+    }
+
     // /**
     //  * @return ComUsuarioAmigo[] Returns an array of ComUsuarioAmigo objects
     //  */

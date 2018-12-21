@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Controller\ApiComunidad\InformacionGeneralController;
 use App\Entity\ComPublicacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -29,9 +30,12 @@ class ComPublicacionRepository extends ServiceEntityRepository
             ->addSelect("p.meGusta")
             ->addSelect("p.totalComentarios")
             ->andWhere("p.codigoUsuarioFk='{$usuario}'")
+            ->orderBy("p.fecha","DESC")
             ->getQuery()->getResult();
 
         for ($i=0;$i<count($arPublicaciones); $i++){
+            $arPublicaciones[$i]['fecha']=$arPublicaciones[$i]['fecha']->format('h:iA F dS, Y');
+            $arPublicaciones[$i]['tiempoTranscurrido']=InformacionGeneralController::getTiempoTranscurrido($arPublicaciones[$i]['fecha']);
             $arComentarios=$em->createQueryBuilder()
                 ->from('App\Entity\ComComentario','c')
                 ->select('c.codigoComentarioPk as comentario')
@@ -40,12 +44,50 @@ class ComPublicacionRepository extends ServiceEntityRepository
                 ->addSelect('c.meGusta')
                 ->andWhere("c.codigoPadreFk IS NULL")
                 ->andWhere("c.codigoPublicacionFk={$arPublicaciones[$i]['publicacion']}")
-                ->setMaxResults(2)
+//                ->setMaxResults(2)
                 ->getQuery()->getResult();
             $arPublicaciones[$i]['comentarios']=$arComentarios;
 
         }
         return $arPublicaciones;
+    }
+
+
+    public function crear($username, $data){
+        $em=$this->getEntityManager();
+        try{
+            $usuario=InformacionGeneralController::usuarioExistente($username);
+            if($usuario){
+            $publicacion=(new ComPublicacion())
+                ->setUsuarioRel($usuario)
+                ->setFecha(new \DateTime('now'))
+                ->setTextoPublicacion($data['texto'])
+                ->setTotalComentarios(0)
+                ->setMeGusta(0);
+
+            $em->persist($publicacion);
+            $em->flush();
+
+            return [
+            'status'=>true,
+            'data'=>[
+                'publicacion'       =>$publicacion->getCodigoPublicacionPk(),
+                'texto'             =>$publicacion->getTextoPublicacion(),
+                'fecha'             =>$publicacion->getFecha(),
+                'meGusta'           =>$publicacion->getMeGusta(),
+                'totalComentarios'  =>$publicacion->getTotalComentarios(),
+                'comentarios'       =>[],
+                ],
+            ];
+            }
+        }catch (\Exception $exception){
+            return [
+            'status'=>false,
+            'data'=>[
+                'message'=>$exception->getMessage(),
+                ],
+            ];
+        }
     }
 
     // /**
