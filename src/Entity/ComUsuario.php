@@ -63,6 +63,11 @@ class ComUsuario
     protected $publicacionComUsuarioRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ComComentario", mappedBy="usuarioRel", cascade={"remove","persist"})
+     */
+    protected $comentarioUsuarioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoUsuarioPk()

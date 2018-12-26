@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Controller\ApiComunidad\InformacionGeneralController;
+use App\Entity\ComComentario;
 use App\Entity\ComPublicacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -29,6 +30,7 @@ class ComPublicacionRepository extends ServiceEntityRepository
             ->addSelect("p.fecha")
             ->addSelect("p.meGusta")
             ->addSelect("p.totalComentarios")
+            ->addSelect("p.codigoUsuarioFk as usuario")
             ->andWhere("p.codigoUsuarioFk='{$usuario}'")
             ->orderBy("p.fecha","DESC")
             ->getQuery()->getResult();
@@ -42,8 +44,10 @@ class ComPublicacionRepository extends ServiceEntityRepository
                 ->addSelect('c.texto_comentario as texto')
                 ->addSelect('c.fecha')
                 ->addSelect('c.meGusta')
+                ->addSelect('c.codigoUsuarioFk as usuario')
                 ->andWhere("c.codigoPadreFk IS NULL")
                 ->andWhere("c.codigoPublicacionFk={$arPublicaciones[$i]['publicacion']}")
+                ->orderBy("c.fecha","DESC")
 //                ->setMaxResults(2)
                 ->getQuery()->getResult();
             $arPublicaciones[$i]['comentarios']=$arComentarios;
@@ -69,11 +73,12 @@ class ComPublicacionRepository extends ServiceEntityRepository
             $em->flush();
 
             return [
-            'status'=>true,
-            'data'=>[
+            'estado'=>true,
+            'datos'=>[
                 'publicacion'       =>$publicacion->getCodigoPublicacionPk(),
                 'texto'             =>$publicacion->getTextoPublicacion(),
-                'fecha'             =>$publicacion->getFecha(),
+                'fecha'             =>$publicacion->getFecha()->format('h:iA F dS, Y'),
+                'tiempoTranscurrido'=>InformacionGeneralController::getTiempoTranscurrido($publicacion->getFecha()),
                 'meGusta'           =>$publicacion->getMeGusta(),
                 'totalComentarios'  =>$publicacion->getTotalComentarios(),
                 'comentarios'       =>[],
@@ -82,9 +87,51 @@ class ComPublicacionRepository extends ServiceEntityRepository
             }
         }catch (\Exception $exception){
             return [
-            'status'=>false,
-            'data'=>[
+            'estado'=>false,
+            'datos'=>[
                 'message'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
+
+    public function crearComentario($username, $data){
+        $em=$this->getEntityManager();
+        try{
+            $usuario=InformacionGeneralController::usuarioExistente($username);
+            if($usuario){
+                $arPublicacion=$em->getRepository('App\Entity\ComPublicacion')->find($data['comentario']);
+                $arComentario=(new ComComentario())
+                    ->setUsuarioRel($usuario)
+                    ->setFecha(new \DateTime('now'))
+                    ->setTextoComentario($data['texto'])
+                    ->setPublicacionRel($arPublicacion)
+                    ->setMeGusta(0);
+
+                $arPublicacion->setTotalComentarios($arPublicacion->getTotalComentarios()+1);
+                $em->persist($arPublicacion);
+                $em->persist($arComentario);
+                $em->flush();
+
+                return [
+                    'estado'=>true,
+                    'datos'=>[
+                        'comentario'        =>$arComentario->getCodigoComentarioPk(),
+                        'texto'             =>$arComentario->getTextoComentario(),
+                        'fecha'             =>$arComentario->getFecha()->format('h:iA F dS, Y'),
+                        'tiempoTranscurrido'=>InformacionGeneralController::getTiempoTranscurrido($arComentario->getFecha()),
+                        'meGusta'           =>$arComentario->getMeGusta(),
+                        'totalComentarios'  =>$arPublicacion->getTotalComentarios(),
+//                        'comentarios'       =>[],
+                    ],
+                ];
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'message'=>$exception->getMessage(),
                 ],
             ];
         }

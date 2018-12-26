@@ -17,6 +17,11 @@ class ComComentario
     private $codigoComentarioPk;
 
     /**
+     * @ORM\Column(name="codigo_usuario_fk", type="string", length=100, nullable=false)
+     */
+    private $codigoUsuarioFk;
+
+    /**
      * @ORM\Column(name="codigo_publicacion_fk", type="integer", nullable=false)
      */
     private $codigoPublicacionFk;
@@ -41,6 +46,13 @@ class ComComentario
      */
     private $meGusta;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ComUsuario", inversedBy="comentarioUsuarioRel")
+     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="codigo_usuario_pk")
+     */
+    protected $usuarioRel;
+
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\ComPublicacion", inversedBy="comentarioPublicacionRel")
      * @ORM\JoinColumn(name="codigo_publicacion_fk", referencedColumnName="codigo_publicacion_pk")
@@ -63,6 +75,24 @@ class ComComentario
         $this->codigoComentarioPk = $codigoComentarioPk;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUsuarioFk()
+    {
+        return $this->codigoUsuarioFk;
+    }
+
+    /**
+     * @param mixed $codigoUsuarioFk
+     */
+    public function setCodigoUsuarioFk($codigoUsuarioFk)
+    {
+        $this->codigoUsuarioFk = $codigoUsuarioFk;
+        return $this;
+    }
+
 
     /**
      * @return mixed
@@ -163,6 +193,23 @@ class ComComentario
     public function setPublicacionRel($publicacionRel)
     {
         $this->publicacionRel = $publicacionRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuarioRel()
+    {
+        return $this->usuarioRel;
+    }
+
+    /**
+     * @param mixed $usuarioRel
+     */
+    public function setUsuarioRel($usuarioRel)
+    {
+        $this->usuarioRel = $usuarioRel;
         return $this;
     }
 

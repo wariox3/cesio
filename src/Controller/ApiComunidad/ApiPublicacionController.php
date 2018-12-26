@@ -35,7 +35,23 @@ class ApiPublicacionController extends FOSRestController
             $arUsuario=InformacionGeneralController::usuarioExistente($username);
             if($arUsuario){
                 $em=$this->getDoctrine();
-                return $em->getRepository('App\Entity\ComPublicacion')->crear($arUsuario->getCodigoUsuarioPk(),$data['data']);
+                return $em->getRepository('App\Entity\ComPublicacion')->crear($arUsuario->getCodigoUsuarioPk(),$data['datos']);
+
+            }
+        }
+    }
+
+
+    /**
+     * @Rest\Post("/api/comunidad/publicacion/comentario/crear/{username}", name="api_comunidad_publicacion_comentario_crear")
+     */
+    public function crearComentario(Request $request, $username){
+        $data=json_decode($request->getContent(),true);
+        if($username!=""){
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $em=$this->getDoctrine();
+                return $em->getRepository('App\Entity\ComPublicacion')->crearComentario($arUsuario->getCodigoUsuarioPk(),$data['datos']);
 
             }
         }
