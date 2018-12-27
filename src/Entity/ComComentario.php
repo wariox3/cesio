@@ -60,6 +60,11 @@ class ComComentario
     protected $publicacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ComMeGustaComentario", mappedBy="comentarioRel", cascade={"remove","persist"})
+     */
+    protected $meGustaComentarioComentarioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoComentarioPk()
@@ -210,6 +215,23 @@ class ComComentario
     public function setUsuarioRel($usuarioRel)
     {
         $this->usuarioRel = $usuarioRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMeGustaComentarioComentarioRel()
+    {
+        return $this->meGustaComentarioComentarioRel;
+    }
+
+    /**
+     * @param mixed $meGustaComentarioComentarioRel
+     */
+    public function setMeGustaComentarioComentarioRel($meGustaComentarioComentarioRel)
+    {
+        $this->meGustaComentarioComentarioRel = $meGustaComentarioComentarioRel;
         return $this;
     }
 
