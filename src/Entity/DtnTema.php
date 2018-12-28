@@ -54,6 +54,27 @@ class DtnTema
     /**
      * @return mixed
      */
+    public function getCodigoModeloFk()
+    {
+        return $this->codigoModeloFk;
+    }
+
+    /**
+     * @param mixed $codigoModeloFk
+     */
+    public function setCodigoModeloFk( $codigoModeloFk ): void
+    {
+        $this->codigoModeloFk = $codigoModeloFk;
+    }
+
+    /**
+     * @ORM\Column(name="codigo_modelo_fk", length=80, type="string", nullable=true)
+     */
+    private $codigoModeloFk;
+
+    /**
+     * @return mixed
+     */
     public function getCodigoTemaPk()
     {
         return $this->codigoTemaPk;
