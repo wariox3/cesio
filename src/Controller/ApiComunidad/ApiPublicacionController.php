@@ -2,6 +2,7 @@
 
 namespace App\Controller\ApiComunidad;
 
+use App\Entity\ComMeGustaComentario;
 use App\Entity\ComMeGustaPublicacion;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -17,12 +18,12 @@ class ApiPublicacionController extends FOSRestController
         if($username!=""){
             $arUsuario=InformacionGeneralController::usuarioExistente($username);
             if($arUsuario){
-            $em=$this->getDoctrine();
-            $arPublicacionUsuario=$em->getRepository('App\Entity\ComPublicacion')->listaMisPublicaciones($arUsuario->getCodigoUsuarioPk());
-            return [
-                'estado'=>true,
-                'datos'=>$arPublicacionUsuario,
-            ];
+                $em=$this->getDoctrine();
+                $arPublicacionUsuario=$em->getRepository('App\Entity\ComPublicacion')->listaMisPublicaciones($arUsuario->getCodigoUsuarioPk());
+                return [
+                    'estado'=>true,
+                    'datos'=>$arPublicacionUsuario,
+                ];
             }
         }
     }
@@ -105,20 +106,64 @@ class ApiPublicacionController extends FOSRestController
                     $em->flush();
                 }
                 return [
-                'estado'=>true,
-                'datos'=>[
-                    'meGustas'=>$arPublicacion->getMeGusta(),
+                    'estado'=>true,
+                    'datos'=>[
+                        'meGustas'=>$arPublicacion->getMeGusta(),
                     ],
                 ];
             }
         }catch (\Exception $exception){
             return [
-            'estado'=>false,
-            'datos'=>[
-                'message'=>$exception->getMessage(),
+                'estado'=>false,
+                'datos'=>[
+                    'message'=>$exception->getMessage(),
                 ],
             ];
         }
     }
 
+
+    /**
+     * @Rest\Get("/api/comunidad/comentario/meGusta/{username}/{comentario}", name="api_comunidad_comentario_meGusta")
+     */
+    public function meGustaComentario($username,$comentario){
+        $em=$this->getDoctrine()->getManager();
+        $arUsuario=InformacionGeneralController::usuarioExistente($username);
+        try{
+            if($arUsuario){
+                $arComentario=$em->getRepository('App\Entity\ComComentario')->find($comentario);
+                if($arComentario){
+                    $arMegustaComentario=$em->getRepository('App\Entity\ComMeGustaComentario')->findOneBy(['codigoUsuarioFk'=>$username,'codigoComentarioFk'=>$comentario]);
+                    if($arMegustaComentario){
+                        $arComentario->setMeGusta($arComentario->getMeGusta()-1);
+                        $em->persist($arComentario);
+                        $em->remove($arMegustaComentario);
+                    }else{
+                        $arMegustaComentario=(new ComMeGustaComentario())
+                            ->setFecha(new \DateTime('now'))
+                            ->setUsuarioRel($arUsuario)
+                            ->setComentarioRel($arComentario);
+                        $arComentario->setMeGusta($arComentario->getMeGusta()+1);
+                        $em->persist($arComentario);
+                        $em->persist($arMegustaComentario);
+
+                    }
+                    $em->flush();
+                }
+                return [
+                    'estado'=>true,
+                    'datos'=>[
+                        'meGustas'=>$arComentario->getMeGusta(),
+                    ],
+                ];
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'message'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
 }

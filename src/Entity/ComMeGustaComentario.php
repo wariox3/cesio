@@ -42,4 +42,108 @@ class ComMeGustaComentario
      * @ORM\JoinColumn(name="codigo_comentario_fk", referencedColumnName="codigo_comentario_pk")
      */
     protected $comentarioRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMeGustaComentarioPk()
+    {
+        return $this->codigoMeGustaComentarioPk;
+    }
+
+    /**
+     * @param mixed $codigoMeGustaComentarioPk
+     */
+    public function setCodigoMeGustaComentarioPk($codigoMeGustaComentarioPk)
+    {
+        $this->codigoMeGustaComentarioPk = $codigoMeGustaComentarioPk;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUsuarioFk()
+    {
+        return $this->codigoUsuarioFk;
+    }
+
+    /**
+     * @param mixed $codigoUsuarioFk
+     */
+    public function setCodigoUsuarioFk($codigoUsuarioFk)
+    {
+        $this->codigoUsuarioFk = $codigoUsuarioFk;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComentarioFk()
+    {
+        return $this->codigoComentarioFk;
+    }
+
+    /**
+     * @param mixed $codigoComentarioFk
+     */
+    public function setCodigoComentarioFk($codigoComentarioFk)
+    {
+        $this->codigoComentarioFk = $codigoComentarioFk;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuarioRel()
+    {
+        return $this->usuarioRel;
+    }
+
+    /**
+     * @param mixed $usuarioRel
+     */
+    public function setUsuarioRel($usuarioRel)
+    {
+        $this->usuarioRel = $usuarioRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarioRel()
+    {
+        return $this->comentarioRel;
+    }
+
+    /**
+     * @param mixed $comentarioRel
+     */
+    public function setComentarioRel($comentarioRel)
+    {
+        $this->comentarioRel = $comentarioRel;
+        return $this;
+    }
+
+
 }
