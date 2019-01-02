@@ -68,6 +68,16 @@ class ComUsuario
     protected $comentarioUsuarioRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ComMeGustaPublicacion", mappedBy="usuarioRel", cascade={"remove","persist"})
+     */
+    protected $meGustaPublicacionUsuarioRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ComMeGustaComentario", mappedBy="usuarioRel", cascade={"remove", "persist"})
+     */
+    protected $meGustaComentarioUsuarioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoUsuarioPk()
@@ -237,6 +247,76 @@ class ComUsuario
         $this->publicacionComUsuario = $publicacionComUsuario;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicacionComUsuarioRel()
+    {
+        return $this->publicacionComUsuarioRel;
+    }
+
+    /**
+     * @param mixed $publicacionComUsuarioRel
+     */
+    public function setPublicacionComUsuarioRel($publicacionComUsuarioRel)
+    {
+        $this->publicacionComUsuarioRel = $publicacionComUsuarioRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarioUsuarioRel()
+    {
+        return $this->comentarioUsuarioRel;
+    }
+
+    /**
+     * @param mixed $comentarioUsuarioRel
+     */
+    public function setComentarioUsuarioRel($comentarioUsuarioRel)
+    {
+        $this->comentarioUsuarioRel = $comentarioUsuarioRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMeGustaPublicacionUsuarioRel()
+    {
+        return $this->meGustaPublicacionUsuarioRel;
+    }
+
+    /**
+     * @param mixed $meGustaPublicacionUsuarioRel
+     */
+    public function setMeGustaPublicacionUsuarioRel($meGustaPublicacionUsuarioRel)
+    {
+        $this->meGustaPublicacionUsuarioRel = $meGustaPublicacionUsuarioRel;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMeGustaComentarioUsuarioRel()
+    {
+        return $this->meGustaComentarioUsuarioRel;
+    }
+
+    /**
+     * @param mixed $meGustaComentarioUsuarioRel
+     */
+    public function setMeGustaComentarioUsuarioRel($meGustaComentarioUsuarioRel)
+    {
+        $this->meGustaComentarioUsuarioRel = $meGustaComentarioUsuarioRel;
+        return $this;
+    }
+
+
 
 
 

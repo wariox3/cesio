@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\ComComentario;
+use App\Entity\ComMeGustaPublicacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method ComComentario|null find($id, $lockMode = null, $lockVersion = null)
- * @method ComComentario|null findOneBy(array $criteria, array $orderBy = null)
- * @method ComComentario[]    findAll()
- * @method ComComentario[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ComMeGustaPublicacion|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ComMeGustaPublicacion|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ComMeGustaPublicacion[]    findAll()
+ * @method ComMeGustaPublicacion[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ComComentarioRepository extends ServiceEntityRepository
+class ComMeGustaPublicacionRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, ComComentario::class);
+        parent::__construct($registry, ComMeGustaPublicacion::class);
     }
 
     // /**
-    //  * @return ComComentario[] Returns an array of ComComentario objects
+    //  * @return ComMeGustaPublicacion[] Returns an array of ComMeGustaPublicacion objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ComComentarioRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?ComComentario
+    public function findOneBySomeField($value): ?ComMeGustaPublicacion
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')
