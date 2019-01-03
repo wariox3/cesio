@@ -166,4 +166,12 @@ class ApiPublicacionController extends FOSRestController
             ];
         }
     }
+
+    /**
+     * @Rest\Get("/api/comunidad/publicacion/editar/{username}/{publicacion}", name="api_comunidad_publicacion_editar")
+     */
+    public function editarPublicacion($username,$publicacion){
+
+    }
+
 }
