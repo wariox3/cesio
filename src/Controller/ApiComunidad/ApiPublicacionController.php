@@ -171,7 +171,79 @@ class ApiPublicacionController extends FOSRestController
      * @Rest\Get("/api/comunidad/publicacion/editar/{username}/{publicacion}", name="api_comunidad_publicacion_editar")
      */
     public function editarPublicacion($username,$publicacion){
+        $em=$this->getDoctrine()->getManager();
+        try{
+        $arUsuario=InformacionGeneralController::usuarioExistente($username);
+           if($arUsuario){
+                $arPublicacion=$em->getRepository('App\Entity\ComPublicacion')->editarPublicacion($publicacion);
+                if($arPublicacion){
+                    return [
+                        'estado'=>true,
+                        'datos'=>$arPublicacion
+                    ];
+                }
+                else{
+                    return [
+                    'estado'=>false,
+                    'datos'=>[
+                        'mensaje'=>"No se pudo consultar la informacion de la publicacion",
+                        ],
+                    ];
+                }
+           }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
 
+    /**
+     * @Rest\Post("/api/comunidad/publicacion/actualizar/{username}", name="api_comunidad_publicacion_actualizar")
+     */
+    public function actualizarPublicacion(Request $request,$username){
+        $em=$this->getDoctrine()->getManager();
+        try{
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $data=json_decode($request->getContent(),true);
+                $data=$data['datos'];
+                $arPublicacion=$em->getRepository('App\Entity\ComPublicacion')->find($data['publicacion']);
+                if($arPublicacion){
+                    $arPublicacion->setTextoPublicacion($data['texto']);
+                    $em->persist($arPublicacion);
+                    $em->flush();
+                    return [
+                        'estado'=>true,
+                        'datos'=>[
+                            'publicacion'=>$arPublicacion->getCodigoPublicacionPk(),
+                            'textoPublicacion'=>$arPublicacion->getTextoPublicacion(),
+                            'tiempoTranscurrido'=>InformacionGeneralController::getTiempoTranscurrido($arPublicacion->getFecha()),
+                            'nombre'=>$arPublicacion->getUsuarioRel()->getNombreCorto(),
+
+                        ]
+                    ];
+                }
+                else{
+                    return [
+                        'estado'=>false,
+                        'datos'=>[
+                            'mensaje'=>"No se pudo editar la publicacion",
+                        ],
+                    ];
+                }
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
     }
 
 }
