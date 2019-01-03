@@ -71,6 +71,7 @@ class ComUsuarioAmigoRepository extends ServiceEntityRepository
             ->from('App\Entity\ComUsuarioAmigo','ua')
             ->select('COUNT(ua.codigoUsuarioAmigoPk) as amigos')
             ->where("ua.codigoUsuarioFk='{$usernameSolicitante}' OR ua.codigoUsuarioEsAmigoFk='{$usernameSolicitante}'")
+            ->andWhere("ua.estado='amigo'")
             ->getQuery()->getSingleResult();
 
         return $amigos['amigos'];
