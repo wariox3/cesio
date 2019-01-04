@@ -19,6 +19,17 @@ class ComComentarioRepository extends ServiceEntityRepository
         parent::__construct($registry, ComComentario::class);
     }
 
+    public function editarComentario($comentario){
+        $em=$this->getEntityManager();
+        $arComentario=$em->createQueryBuilder()
+            ->from('App\Entity\ComComentario','c')
+            ->addSelect('c.codigoComentarioPk as comentario')
+            ->addSelect('c.texto_comentario as textoComentario')
+            ->andWhere("c.codigoComentarioPk='{$comentario}'")
+            ->getQuery()->getOneOrNullResult();
+
+        return $arComentario;
+    }
     // /**
     //  * @return ComComentario[] Returns an array of ComComentario objects
     //  */
