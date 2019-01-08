@@ -166,4 +166,254 @@ class ApiPublicacionController extends FOSRestController
             ];
         }
     }
+
+    /**
+     * @Rest\Get("/api/comunidad/publicacion/editar/{username}/{publicacion}", name="api_comunidad_publicacion_editar")
+     */
+    public function editarPublicacion($username,$publicacion){
+        $em=$this->getDoctrine()->getManager();
+        try{
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $arPublicacion=$em->getRepository('App\Entity\ComPublicacion')->editarPublicacion($publicacion);
+                if($arPublicacion){
+                    return [
+                        'estado'=>true,
+                        'datos'=>$arPublicacion
+                    ];
+                }
+                else{
+                    return [
+                        'estado'=>false,
+                        'datos'=>[
+                            'mensaje'=>"No se pudo consultar la informacion de la publicacion",
+                        ],
+                    ];
+                }
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/api/comunidad/publicacion/actualizar/{username}", name="api_comunidad_publicacion_actualizar")
+     */
+    public function actualizarPublicacion(Request $request,$username){
+        $em=$this->getDoctrine()->getManager();
+        try{
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $data=json_decode($request->getContent(),true);
+                $data=$data['datos'];
+                $arPublicacion=$em->getRepository('App\Entity\ComPublicacion')->find($data['publicacion']);
+                if($arPublicacion){
+                    $arPublicacion->setTextoPublicacion($data['texto']);
+                    $em->persist($arPublicacion);
+                    $em->flush();
+                    return [
+                        'estado'=>true,
+                        'datos'=>[
+                            'publicacion'=>$arPublicacion->getCodigoPublicacionPk(),
+                            'textoPublicacion'=>$arPublicacion->getTextoPublicacion(),
+                            'tiempoTranscurrido'=>InformacionGeneralController::getTiempoTranscurrido($arPublicacion->getFecha()),
+                            'nombre'=>$arPublicacion->getUsuarioRel()->getNombreCorto(),
+
+                        ]
+                    ];
+                }
+                else{
+                    return [
+                        'estado'=>false,
+                        'datos'=>[
+                            'mensaje'=>"No se pudo editar la publicacion",
+                        ],
+                    ];
+                }
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
+
+    /**
+     * @Rest\Get("/api/comunidad/comentario/editar/{username}/{comentario}", name="api_comunidad_comentario_editar")
+     */
+    public function editarComentario($username,$comentario){
+        $em=$this->getDoctrine()->getManager();
+        try{
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $arComentario=$em->getRepository('App\Entity\ComComentario')->editarComentario($comentario);
+                if($arComentario){
+                    return [
+                        'estado'=>true,
+                        'datos'=>$arComentario
+                    ];
+                }
+                else{
+                    return [
+                        'estado'=>false,
+                        'datos'=>[
+                            'mensaje'=>"No se pudo consultar la informacion del comentario",
+                        ],
+                    ];
+                }
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/api/comunidad/comentario/actualizar/{username}", name="api_comunidad_comentario_actualizar")
+     */
+    public function actualizarComentario(Request $request,$username){
+        $em=$this->getDoctrine()->getManager();
+        try{
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $data=json_decode($request->getContent(),true);
+                $data=$data['datos'];
+                $arComentario=$em->getRepository('App\Entity\ComComentario')->find($data['comentario']);
+                if($arComentario){
+                    $arComentario->setTextoComentario($data['texto']);
+                    $em->persist($arComentario);
+                    $em->flush();
+                    return [
+                        'estado'=>true,
+                        'datos'=>[
+                            'comentario'=>$arComentario->getCodigoComentarioPk(),
+                            'textoPublicacion'=>$arComentario->getTextoComentario(),
+                            'tiempoTranscurrido'=>InformacionGeneralController::getTiempoTranscurrido($arComentario->getFecha()),
+                            'nombre'=>$arComentario->getUsuarioRel()->getNombreCorto(),
+
+                        ]
+                    ];
+                }
+                else{
+                    return [
+                        'estado'=>false,
+                        'datos'=>[
+                            'mensaje'=>"No se pudo editar el comentario",
+                        ],
+                    ];
+                }
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Get("/api/comunidad/comentario/eliminar/{username}/{comentario}", name="api_comunidad_comentario_eliminar")
+     */
+    public function eliminarComentario($username, $comentario){
+        $em=$this->getDoctrine()->getManager();
+        try{
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $arComentario=$em->getRepository('App\Entity\ComComentario')->find($comentario);
+                if($arComentario){
+                    $arMeGustaComentario=$em->getRepository('App\Entity\ComMeGustaComentario')->findBy(['codigoComentarioFk'=>$comentario]);
+                    if($arMeGustaComentario){
+                        foreach ($arMeGustaComentario as $megusta)
+                            $em->remove($megusta);
+                    }
+                    $arPublicacion=$em->getRepository('App\Entity\ComPublicacion')->find($arComentario->getCodigoPublicacionFk());
+                    $arPublicacion->setTotalComentarios($arPublicacion->getTotalComentarios()-1);
+                    $em->remove($arComentario);
+                    $em->flush();
+                    return [
+                        'estado'=>true,
+                        'datos'=>[
+                            'totalComentario'   =>$arPublicacion->getTotalComentarios(),
+                            'publicacion'       =>$arPublicacion->getCodigoPublicacionPk()
+                        ]
+                    ];
+                }else{
+                    return [
+                        'estado'=>false,
+                        'datos'=>[
+                            'mensaje'=>"No se pudo eliminar el comentario",
+                        ],
+                    ];
+                }
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Get("/api/comunidad/publicacion/eliminar/{username}/{publicacion}", name="api_comunidad_publicacion_eliminar")
+     */
+    public function eliminarPublicacion($username, $publicacion){
+        $em=$this->getDoctrine()->getManager();
+        try{
+            $arUsuario=InformacionGeneralController::usuarioExistente($username);
+            if($arUsuario){
+                $arPublicacion=$em->getRepository('App\Entity\ComPublicacion')->find($publicacion);
+                if($arPublicacion){
+                    $arMeGustaPublicacion=$em->getRepository('App\Entity\ComMeGustaPublicacion')->findBy(['codigoPublicacionFk'=>$publicacion]);
+                    $arComentarios=$em->getRepository('App\Entity\ComComentario')->findBy(['codigoPublicacionFk'=>$publicacion]);
+                    if($arComentarios){
+                        foreach ($arComentarios as $comentario){
+                            $em->remove($comentario);
+                        }
+                    }
+                    if($arMeGustaPublicacion){
+                        foreach ($arMeGustaPublicacion as $megusta)
+                            $em->remove($megusta);
+                    }
+                    $em->remove($arPublicacion);
+                    $em->flush();
+                    return [
+                        'estado'=>true,
+                    ];
+                }else{
+                    return [
+                        'estado'=>false,
+                        'datos'=>[
+                            'mensaje'=>"No se pudo eliminar la publicacion",
+                        ],
+                    ];
+                }
+            }
+        }catch (\Exception $exception){
+            return [
+                'estado'=>false,
+                'datos'=>[
+                    'mensaje'=>$exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
 }

@@ -87,6 +87,11 @@ class Licencia
     private $turno=false;
 
     /**
+     * @ORM\Column(name="crm",type="boolean", options={"default":false}, nullable=true)
+     */
+    private $crm=false;
+
+    /**
      * @return mixed
      */
     public function getCodigoLicenciaPk()
@@ -340,5 +345,24 @@ class Licencia
         $this->turno = $turno;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCrm()
+    {
+        return $this->crm;
+    }
+
+    /**
+     * @param mixed $crm
+     */
+    public function setCrm($crm)
+    {
+        $this->crm = $crm;
+        return $this;
+    }
+
+
 
 }

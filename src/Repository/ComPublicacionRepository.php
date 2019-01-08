@@ -185,6 +185,19 @@ class ComPublicacionRepository extends ServiceEntityRepository
         }
     }
 
+    public function editarPublicacion($publicacion){
+        $em=$this->getEntityManager();
+        $arPublicacion=$em->createQueryBuilder()
+            ->from('App\Entity\ComPublicacion','p')
+            ->addSelect('p.codigoPublicacionPk as publicacion')
+            ->addSelect('p.textoPublicacion')
+            ->andWhere("p.codigoPublicacionPk='{$publicacion}'")
+            ->getQuery()->getOneOrNullResult();
+
+        return $arPublicacion;
+    }
+
+
     // /**
     //  * @return ComPublicacion[] Returns an array of ComPublicacion objects
     //  */
