@@ -24,13 +24,15 @@ class DtnTemaRepository extends ServiceEntityRepository
             ->from(DtnTema::class, "t")
             ->select("t")
             ->where('t.codigoTemaPk <> 0');
-        if ($arrDatos['tipoBusqueda'] == 'TOD') {
-            $qb->andWhere("t.titulo LIKE '%{$arrDatos['busqueda']}%' ")
-                ->orWhere("t.descripcion LIKE '%{$arrDatos['busqueda']}%' ");
-        } elseif($arrDatos['tipoBusqueda'] == 'TIT'){
-            $qb->andWhere("t.titulo LIKE '%{$arrDatos['busqueda']}%' ");
-        } else {
-            $qb->andWhere("t.descripcion LIKE '%{$arrDatos['busqueda']}%' ");
+        if ($arrDatos) {
+            if ($arrDatos['tipoBusqueda'] == 'TOD') {
+                $qb->andWhere("t.titulo LIKE '%{$arrDatos['busqueda']}%' ")
+                    ->orWhere("t.descripcion LIKE '%{$arrDatos['busqueda']}%' ");
+            } elseif ($arrDatos['tipoBusqueda'] == 'TIT') {
+                $qb->andWhere("t.titulo LIKE '%{$arrDatos['busqueda']}%' ");
+            } else {
+                $qb->andWhere("t.descripcion LIKE '%{$arrDatos['busqueda']}%' ");
+            }
         }
         return $qb->getQuery()->execute();
     }
