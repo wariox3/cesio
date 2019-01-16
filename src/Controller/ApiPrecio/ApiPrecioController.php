@@ -4,6 +4,7 @@ namespace App\Controller\ApiPrecio;
 
 use App\Entity\Operador;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
@@ -11,22 +12,25 @@ class ApiPrecioController extends AbstractController
 {
     /**
      * @param Request $request
-     * @param int $ciudadOrigen
-     * @param int $ciudadDestino
+     * @param string $ciudadOrigen
+     * @param string $ciudadDestino
      * @param string $producto
      * @param int $peso
      * @param string $codigoOperador
-     * @param string $codigoEmpresa
+     * @param int $listaPrecio
      * @return mixed
-     * @Rest\Get("/api/precio/calcular/{ciudadOrigen}/{ciudadDestino}/{producto}/{peso}/{codigoOperador}/{codigoEmpresa}")
+     * @Rest\Get("/api/precio/calcular/{ciudadOrigen}/{ciudadDestino}/{producto}/{peso}/{codigoOperador}/{listaPrecio}")
      */
-    public function crearGuia(Request $request, $ciudadOrigen = 0, $ciudadDestino = 0, $producto = '', $peso = 0,  $codigoOperador = '', $codigoEmpresa = '')
+    public function crearGuia(Request $request, $ciudadOrigen = '', $ciudadDestino = '', $producto = '', $peso = 0,  $codigoOperador = '', $listaPrecio = 0)
     {
         $em = $this->getDoctrine()->getManager();
         $arOperador = $em->find(Operador::class, $codigoOperador);
-        $ch = curl_init($arOperador->getUrlServicio() . "transporte/api/cesio/precio/calcular/{$ciudadOrigen}/{$ciudadDestino}/{$producto}/{$peso}/{$codigoEmpresa}");
+        $url = $arOperador->getUrlServicio() . "transporte/api/cesio/precio/calcular/{$ciudadOrigen}/{$ciudadDestino}/{$producto}/{$peso}/{$listaPrecio}";
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-        $repuesta = json_decode(curl_exec($ch));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $repuesta = curl_exec($ch);
+        curl_close($ch);
         return $repuesta;
     }
 }
