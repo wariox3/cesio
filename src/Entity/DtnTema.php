@@ -22,6 +22,16 @@ class DtnTema
     private $titulo;
 
     /**
+     * @ORM\Column(name="modulo", type="string", length=40, nullable=true)
+     */
+    private $modulo;
+
+    /**
+     * @ORM\Column(name="funcion", type="string", length=40, nullable=true)
+     */
+    private $funcion;
+
+    /**
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
@@ -54,27 +64,6 @@ class DtnTema
     /**
      * @return mixed
      */
-    public function getCodigoModeloFk()
-    {
-        return $this->codigoModeloFk;
-    }
-
-    /**
-     * @param mixed $codigoModeloFk
-     */
-    public function setCodigoModeloFk( $codigoModeloFk ): void
-    {
-        $this->codigoModeloFk = $codigoModeloFk;
-    }
-
-    /**
-     * @ORM\Column(name="codigo_modelo_fk", length=80, type="string", nullable=true)
-     */
-    private $codigoModeloFk;
-
-    /**
-     * @return mixed
-     */
     public function getCodigoTemaPk()
     {
         return $this->codigoTemaPk;
@@ -102,6 +91,38 @@ class DtnTema
     public function setTitulo($titulo): void
     {
         $this->titulo = $titulo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModulo()
+    {
+        return $this->modulo;
+    }
+
+    /**
+     * @param mixed $modulo
+     */
+    public function setModulo($modulo): void
+    {
+        $this->modulo = $modulo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFuncion()
+    {
+        return $this->funcion;
+    }
+
+    /**
+     * @param mixed $funcion
+     */
+    public function setFuncion($funcion): void
+    {
+        $this->funcion = $funcion;
     }
 
     /**

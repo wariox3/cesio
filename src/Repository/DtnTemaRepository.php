@@ -33,6 +33,12 @@ class DtnTemaRepository extends ServiceEntityRepository
             } else {
                 $qb->andWhere("t.descripcion LIKE '%{$arrDatos['busqueda']}%' ");
             }
+            if($arrDatos['modulo'] != 'TOD'){
+                $qb->andWhere("t.modulo = '{$arrDatos['modulo']}'");
+            }
+            if($arrDatos['funcion'] != 'TOD'){
+                $qb->andWhere("t.funcion = '{$arrDatos['funcion']}'");
+            }
         }
         return $qb->getQuery()->execute();
     }
