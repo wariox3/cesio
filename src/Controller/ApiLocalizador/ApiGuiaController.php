@@ -11,17 +11,23 @@ use Symfony\Component\HttpFoundation\Request;
 class ApiGuiaController extends FOSRestController
 {
     /**
-     * @Rest\Get("/api/localizador/guia/estado/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_estado")
+     * @Rest\Get("/api/localizador/guia/estado/{codigoOperador}/{codigoGuia}/{documentoCliente}", name="api_localizador_guia_estado")
      */
-    public function estado(Request $request, $codigoOperador, $codigoGuia)
+    public function estado(Request $request, $codigoOperador, $codigoGuia, $documentoCliente)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
+        if($codigoGuia){
+            $url = $direccion . "/transporte/api/app/guia/consulta/{$codigoGuia}/0";
+        } else {
+            $url = $direccion . "/transporte/api/app/guia/consulta/0/{$documentoCliente}";
+        }
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/consulta/$codigoGuia");
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
@@ -35,7 +41,7 @@ class ApiGuiaController extends FOSRestController
     public function cumplido(Request $request, $codigoOperador, $codigoGuia)
     {
         $em = $this->getDoctrine()->getManager();
-        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
         $curl = curl_init();
         curl_setopt_array($curl, array(
