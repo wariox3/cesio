@@ -13,7 +13,7 @@ class ApiGuiaController extends FOSRestController
     /**
      * @Rest\Get("/api/localizador/guia/estado/{codigoOperador}/{codigoGuia}/{documentoCliente}", name="api_localizador_guia_estado")
      */
-    public function estado(Request $request, $codigoOperador, $codigoGuia, $documentoCliente)
+    public function estado(Request $request, $codigoOperador, $codigoGuia = 0, $documentoCliente = '')
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
