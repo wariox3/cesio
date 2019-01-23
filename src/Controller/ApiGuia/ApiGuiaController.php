@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\ApiLocalizador;
+namespace App\Controller\ApiGuia;
 
 
 use App\Entity\Operador;
@@ -50,6 +50,28 @@ class ApiGuiaController extends FOSRestController
             //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
             CURLOPT_URL => $direccion . '/documental/api/masivo/masivo/tte_guia/' . $codigoGuia,
         ));
+        $resp = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+
+        return $resp;
+    }
+
+    /**
+     * @param Request $request
+     * @param $codigoOperador
+     * @param $codigoGuia
+     * @return mixed
+     * @Rest\Get("/api/localizador/guia/novedad/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_cumplido")
+     */
+    public function novedad(Request $request, $codigoOperador, $codigoGuia){
+        $em = $this->getDoctrine()->getManager();
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
+        $direccion = $arOperador->getUrlServicio();
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $url = $direccion . "/transporte/api/app/guia/novedad/{$codigoGuia}",
+        ]);
         $resp = json_decode(curl_exec($curl), true);
         curl_close($curl);
 
