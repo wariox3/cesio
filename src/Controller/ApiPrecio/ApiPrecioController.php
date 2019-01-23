@@ -25,7 +25,7 @@ class ApiPrecioController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $arOperador = $em->find(Operador::class, $codigoOperador);
-        $url = $arOperador->getUrlServicio() . "transporte/api/cesio/precio/calcular/{$ciudadOrigen}/{$ciudadDestino}/{$producto}/{$peso}/{$listaPrecio}";
+        $url = $arOperador->getUrlServicio() . "/transporte/api/cesio/precio/calcular/{$ciudadOrigen}/{$ciudadDestino}/{$producto}/{$peso}/{$listaPrecio}";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
