@@ -38,8 +38,9 @@ class ApiGuiaController extends FOSRestController
     /**
      * @Rest\Post("/api/localizador/guia/cumplido/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_cumplido")
      */
-    public function cumplido(Request $request, $codigoOperador, $codigoGuia)
+    public function descargaCumplido(Request $request, $codigoOperador, $codigoGuia)
     {
+        $em = $this->getDoctrine()->getManager();
         $em = $this->getDoctrine()->getManager();
         $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
@@ -52,16 +53,16 @@ class ApiGuiaController extends FOSRestController
         ));
         $resp = json_decode(curl_exec($curl), true);
         curl_close($curl);
-
         return $resp;
     }
+
 
     /**
      * @param Request $request
      * @param $codigoOperador
      * @param $codigoGuia
      * @return mixed
-     * @Rest\Get("/api/localizador/guia/novedad/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_cumplido")
+     * @Rest\Get("/api/localizador/guia/novedad/{codigoOperador}/{codigoGuia}", name="api_localizador_guia_novedad")
      */
     public function novedad(Request $request, $codigoOperador, $codigoGuia){
         $em = $this->getDoctrine()->getManager();
