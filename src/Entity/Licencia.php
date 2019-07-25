@@ -92,6 +92,11 @@ class Licencia
     private $crm=false;
 
     /**
+     * @ORM\Column(name="tesoreria",type="boolean", options={"default":false}, nullable=true)
+     */
+    private $tesoreria = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoLicenciaPk()
@@ -363,6 +368,20 @@ class Licencia
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTesoreria()
+    {
+        return $this->tesoreria;
+    }
 
+    /**
+     * @param mixed $tesoreria
+     */
+    public function setTesoreria($tesoreria): void
+    {
+        $this->tesoreria = $tesoreria;
+    }
 
 }
