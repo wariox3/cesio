@@ -78,4 +78,34 @@ class ApiGuiaController extends FOSRestController
 
         return $resp;
     }
+
+    /**
+     * @param Request $request
+     * @param $codigoOperador
+     * @param $codigoGuia
+     * @return mixed
+     * @Rest\Post("/api/guia/liquidar", name="api_guia_liquidar")
+     */
+    public function liquidar(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $data_string = json_encode($raw);
+        $codigoOperador = $raw['codigoOperador'];
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
+        $direccion = $arOperador->getUrlServicio();
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $data_string,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/guia/liquidar",
+            CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' .strlen($data_string))
+        ]);
+        $resp = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+        return $resp;
+    }
 }
