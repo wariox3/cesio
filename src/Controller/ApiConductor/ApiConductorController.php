@@ -54,7 +54,7 @@ class ApiConductorController extends FOSRestController
         $response = curl_exec($ch);
         $arrGuias = json_decode($response, true);
         if($arrGuias['error']) {
-            return null;
+            return [];
         } else {
             return $arrGuias['guias'];
         }
