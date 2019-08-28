@@ -149,4 +149,25 @@ class ApiConductorController extends FOSRestController
         return $respuesta;
     }
 
+    /**
+     * @Rest\Get("/api/conductor/guia/cumplido", name="api_conductor_guia_cumplido")
+     */
+    public function guiaDetalle(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $operador = $raw['operador'];
+            $guia = $raw['guia'];
+            $imagen = $raw['imageString'];
+            $Base64Img = base64_decode($imagen);
+            file_put_contents('/temporal/prueba.jpg', $Base64Img);
+
+            return ['estado' => 'ok'];
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
 }
