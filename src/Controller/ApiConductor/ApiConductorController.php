@@ -150,19 +150,30 @@ class ApiConductorController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/api/conductor/guia/cumplido", name="api_conductor_guia_cumplido")
+     * @Rest\Post("/api/conductor/guia/cumplido", name="api_conductor_guia_cumplido")
      */
-    public function guiaDetalle(Request $request) {
+    public function prueba(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            $operador = $raw['operador'];
-            $guia = $raw['guia'];
-            $imagen = $raw['imageString'];
-            $Base64Img = base64_decode($imagen);
-            file_put_contents('/temporal/prueba.jpg', $Base64Img);
-
-            return ['estado' => 'ok'];
+            $operador = $raw['operador']??null;
+            $arOperador =$em->getRepository(Operador::class)->find($operador);
+            $direccion = $arOperador->getUrlServicio();
+            $data_string = json_encode($raw);
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $data_string,
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_POST => 1,
+                CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/guia/entrega",
+                CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' .strlen($data_string))
+            ]);
+            $resp = json_decode(curl_exec($curl), true);
+            curl_close($curl);
+            return $resp;
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),
