@@ -130,29 +130,41 @@ class ApiConductorController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/api/conductor/monitoreo/registro/{codigoOperador}/{codigoDespacho}/{latitud}/{longitud}/{usuario}", name="api_conductor_monitoreo_registro")
+     * @Rest\Post("/api/conductor/despacho/ubicacion", name="api_conductor_despacho_ubicacion")
      */
-    public function monitoreoRegistro(Request $request, $codigoOperador, $codigoDespacho, $latitud, $longitud, $usuario)
-    {
-
-        set_time_limit(0);
-        ini_set("memory_limit", -1);
-        $em = $this->getDoctrine()->getManager();
-        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
-        $direccion = $arOperador->getUrlServicio();
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/monitoreo/registro/$codigoDespacho/$latitud/$longitud");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = curl_exec($ch);
-        $respuesta = json_decode($response, true);
-        return $respuesta;
+    public function ubicacion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $operador = $raw['operador']??null;
+            $arOperador =$em->getRepository(Operador::class)->find($operador);
+            $direccion = $arOperador->getUrlServicio();
+            $data_string = json_encode($raw);
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $data_string,
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_POST => 1,
+                CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/despacho/ubicacion",
+                CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' .strlen($data_string))
+            ]);
+            $resp = json_decode(curl_exec($curl), true);
+            curl_close($curl);
+            return $resp;
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
     }
 
     /**
      * @Rest\Post("/api/conductor/guia/cumplido", name="api_conductor_guia_cumplido")
      */
-    public function prueba(Request $request) {
+    public function cumplido(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
