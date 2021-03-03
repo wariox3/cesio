@@ -193,4 +193,32 @@ class ApiConductorController extends FOSRestController
         }
     }
 
+    /**
+     * @Rest\Post("/api/novedadtipo/lista", name="api_novedadtipo_lista")
+     */
+    public function novedadLista(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $operador = $raw['operador']??null;
+            $arOperador =$em->getRepository(Operador::class)->find($operador);
+            $direccion = $arOperador->getUrlServicio();
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_POST => 1,
+                CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/novedadtipo/lista",
+
+            ]);
+            $respuesta = json_decode(curl_exec($curl), true);
+            curl_close($curl);
+            return $respuesta;
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
 }
