@@ -108,4 +108,29 @@ class ApiGuiaController extends FOSRestController
         curl_close($curl);
         return $resp;
     }
-}
+
+    /**
+     * @Rest\Post("/api/localizador/guia/novedad/nueva/{codigo}", name="api_localizador_guia_novedad")
+     */
+    public function nuevaNovedad(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $data_string = json_encode($raw);
+        $codigoOperador = $raw['operador'] ?? null;
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
+        $direccion = $arOperador->getUrlServicio();
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $data_string,
+            CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/novedad/nuevo",
+        ]);
+        $resp = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+        return $resp;
+
+    }
+
+    }
