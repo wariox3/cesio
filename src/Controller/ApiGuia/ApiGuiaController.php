@@ -110,7 +110,7 @@ class ApiGuiaController extends FOSRestController
     }
 
     /**
-     * @Rest\Post("/api/localizador/guia/novedad/nueva/{codigo}", name="api_localizador_guia_novedad")
+     * @Rest\Post("/api/localizador/guia/novedad/nueva", name="api_localizador_guia_novedad")
      */
     public function nuevaNovedad(Request $request)
     {
