@@ -4,8 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 class UsuarioRepository extends ServiceEntityRepository
 {
