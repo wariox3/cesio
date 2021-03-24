@@ -208,11 +208,7 @@ class ApiConductorController extends FOSRestController
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_POST => 1,
-                CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/novedadtipo/lista",
-                CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' .strlen($data_string)
-                )
+                CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/novedadtipo/lista"
             ]);
             $respuesta = json_decode(curl_exec($curl), true);
             curl_close($curl);
