@@ -20,6 +20,7 @@ class UsuarioRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = ['error' => 0, 'mensaje' => '', 'autenticar' => false ];
         $codigoOperador = $raw['codigoOperador'] ?? null;
+        return $codigoOperador;
         $contrasena = $raw['contrasena'] ?? null;
         $usuarioNombre = $raw['usuarioNombre'] ?? null;
         if($codigoOperador){
