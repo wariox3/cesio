@@ -231,9 +231,7 @@ class ApiConductorController extends FOSRestController
             $respuesta = $em->getRepository(Usuario::class)->apiNuevo($raw);
             return $respuesta;
         } catch (\Exception $e) {
-            return [
-                'error' => "Ocurrio un error en la api " . $e->getMessage(),
-            ];
+            return  ['error' => 1, 'mensaje' =>  "Ocurrio un error en la api " . $e->getMessage(), 'autenticar' => false ];
         }
     }
 
