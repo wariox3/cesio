@@ -220,9 +220,8 @@ class ApiConductorController extends FOSRestController
         }
     }
 
-
     /**
-     * @Rest\Post("/api/usuario/lista", name="api_usuario_nuevo")
+     * @Rest\Post("/api/usuario/nuevo", name="api_usuario_nuevo")
      */
     public function nuevoUsuario(Request $request)
     {
