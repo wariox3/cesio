@@ -17,7 +17,7 @@ class UsuarioRepository extends ServiceEntityRepository
 
     public function apiNuevo($raw)
     {
-        return $raw;
+        return [$raw];
         $em = $this->getEntityManager();
         $respuesta = ['error' => 0, 'mensaje' => '', 'autenticar' => false ];
         $codigoOperador = $raw['codigoOperador'] ?? null;
