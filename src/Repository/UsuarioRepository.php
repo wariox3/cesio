@@ -55,4 +55,25 @@ class UsuarioRepository extends ServiceEntityRepository
 
         return $respuesta;
     }
+
+    public function apiCambiarContrasena($raw)
+    {
+        $em = $this->getEntityManager();
+        $respuesta = ['error' => 0, 'mensaje' => '', ];
+        $contrasenaNueva = $raw['contrasenaNueva'] ?? null;
+        $usuarioNombre = $raw['usuario'] ?? null;
+        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario'=>$usuarioNombre]);
+
+        if($arUsuario){
+                $arUsuario->setClave($contrasenaNueva);
+                $em->persist($arUsuario);
+                $em->flush();
+                $respuesta['mensaje'] = "Cambio de clave exitoso";
+        } else{
+            $respuesta['error'] = 1;
+            $respuesta['mensaje'] = "Usuario no existe ";
+        }
+
+        return $respuesta;
+    }
 }

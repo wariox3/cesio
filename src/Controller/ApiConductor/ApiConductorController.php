@@ -235,5 +235,20 @@ class ApiConductorController extends FOSRestController
         }
     }
 
+    /**
+     * @Rest\Post("/api/usuario/cambiarcontrasena", name="api_usuario_cambiarcontrasena")
+     */
+    public function cambiarContrasena(Request $request)
+    {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $respuesta = $em->getRepository(Usuario::class)->apiCambiarContrasena($raw);
+            return $respuesta;
+        } catch (\Exception $e) {
+            return  ['error' => 1, 'mensaje' =>  "Ocurrio un error en la api " . $e->getMessage(), ];
+        }
+    }
+
 
 }
