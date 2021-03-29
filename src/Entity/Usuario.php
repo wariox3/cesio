@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UsuarioRepository")
@@ -31,6 +32,24 @@ class Usuario
      * @ORM\Column(name="clave", type="string", length=50, nullable=true)
      */
     private $clave;
+
+
+    /**
+     * @ORM\Column(name="celular", type="string", length=30, nullable=true)
+     * @Assert\Length( max = 30, maxMessage = "El campo no puede contener mas de {{ limit }} caracteres")
+     */
+    private $celular;
+
+    /**
+     * @ORM\Column(name="correo", type="string", length=1000, nullable=true)
+     * @Assert\Length( max = 1000, maxMessage = "El campo no puede contener mas de {{ limit }} caracteres")
+     */
+    private $correo;
+
+    /**
+     * @ORM\Column(name="fecha", type="date", nullable=true)
+     */
+    private $fechaHabilitacion;
 
     /**
      * @return mixed
@@ -97,7 +116,51 @@ class Usuario
     }
 
 
+    /**
+     * @return mixed
+     */
+    public function getCelular()
+    {
+        return $this->celular;
+    }
 
+    /**
+     * @param mixed $celular
+     */
+    public function setCelular($celular): void
+    {
+        $this->celular = $celular;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHabilitacion()
+    {
+        return $this->fechaHabilitacion;
+    }
+
+    /**
+     * @param mixed $fechaHabilitacion
+     */
+    public function setFechaHabilitacion($fechaHabilitacion): void
+    {
+        $this->fechaHabilitacion = $fechaHabilitacion;
+    }
 }
-
