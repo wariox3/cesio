@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Cupon;
 use App\Entity\Operador;
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,7 +25,8 @@ class UsuarioRepository extends ServiceEntityRepository
         $usuarioNombre = $raw['usuarioNombre'] ?? null;
         $celular = $raw['celular'] ?? null;
         $correo = $raw['correo'] ?? null;
-
+        $fechaActual = new \DateTime('now');
+        $fechaHabilitacion = new \DateTime('+1 day');
         if ($correo != null) {
             if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
                 if (is_numeric($celular)) {
@@ -34,15 +36,32 @@ class UsuarioRepository extends ServiceEntityRepository
                             $validarUsarioExistente = $em->getRepository(Usuario::class)->findBy(['usuario' => $usuarioNombre]);
                             if ($validarUsarioExistente == null) {
                                 if (strlen($contrasena) >= 8) {
+                                    /**
+                                     * @IDEA: CREACIÓN DEL USUARIO
+                                     */
                                     $arUsuario = new Usuario();
                                     $arUsuario->setClave($contrasena);
                                     $arUsuario->setUsuario($usuarioNombre);
                                     $arUsuario->setCodigoOperadorFk(trim($codigoOperador));
                                     $arUsuario->setCelular($celular);
                                     $arUsuario->setCorreo($correo);
+                                    $arUsuario->setFechaCreacion($fechaActual);
                                     $em->persist($arUsuario);
+
+                                    /**
+                                     * @IDEA: CREACIÓN DEL CUPON
+                                     */
+                                    $arCupon = new Cupon();
+                                    $arCupon->setCodigoCuponPk(bin2hex(random_bytes(4)));
+                                    $arCupon->setDias(1);
+                                    $arCupon->setVrCupon(0);
+                                    $arCupon->setFechaApicacion($fechaHabilitacion);
+                                    $arCupon->setEstadoAplicado(true);
+                                    $arCupon->setUsuarioAplicado($usuarioNombre);
+                                    $em->persist($arCupon);
+
                                     $em->flush();
-                                    $respuesta['mensaje'] = "Usuario registrado con éxito, bienvenido a Titu {$usuarioNombre}";
+                                    $respuesta['mensaje'] = "Usuario registrado con éxito, bienvenido a Titu {$usuarioNombre}, cupón aplicado por un dia, vence el {$fechaHabilitacion->format('Y-m-d')}";
                                     $respuesta['autenticar'] = True;
                                 } else {
                                     $respuesta['error'] = 1;

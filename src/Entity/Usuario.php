@@ -47,9 +47,9 @@ class Usuario
     private $correo;
 
     /**
-     * @ORM\Column(name="fecha", type="date", nullable=true)
+     * @ORM\Column(name="fecha_creacion", type="date", nullable=true)
      */
-    private $fechaHabilitacion;
+    private $fechaCreacion;
 
     /**
      * @return mixed
@@ -146,6 +146,22 @@ class Usuario
     public function setCorreo($correo): void
     {
         $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaCreacion()
+    {
+        return $this->fechaCreacion;
+    }
+
+    /**
+     * @param mixed $fechaCreacion
+     */
+    public function setFechaCreacion($fechaCreacion): void
+    {
+        $this->fechaCreacion = $fechaCreacion;
     }
 
     /**
