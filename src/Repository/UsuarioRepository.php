@@ -26,7 +26,6 @@ class UsuarioRepository extends ServiceEntityRepository
         $celular = $raw['celular'] ?? null;
         $correo = $raw['correo'] ?? null;
         $fechaActual = new \DateTime('now');
-        $fechaHabilitacion = new \DateTime('+1 day');
         if ($correo != null) {
             if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
                 if (is_numeric($celular)) {
@@ -46,22 +45,10 @@ class UsuarioRepository extends ServiceEntityRepository
                                     $arUsuario->setCelular($celular);
                                     $arUsuario->setCorreo($correo);
                                     $arUsuario->setFechaCreacion($fechaActual);
+                                    $arUsuario->setFechaHabilitacion($fechaActual);
                                     $em->persist($arUsuario);
-
-                                    /**
-                                     * @IDEA: CREACIÓN DEL CUPON
-                                     */
-                                    $arCupon = new Cupon();
-                                    $arCupon->setCodigoCuponPk(bin2hex(random_bytes(4)));
-                                    $arCupon->setDias(1);
-                                    $arCupon->setVrCupon(0);
-                                    $arCupon->setFechaApicacion($fechaHabilitacion);
-                                    $arCupon->setEstadoAplicado(true);
-                                    $arCupon->setUsuarioAplicado($usuarioNombre);
-                                    $em->persist($arCupon);
-
                                     $em->flush();
-                                    $respuesta['mensaje'] = "Usuario registrado con éxito, bienvenido a Titu {$usuarioNombre}, cupón aplicado por un dia, vence el {$fechaHabilitacion->format('Y-m-d')}";
+                                    $respuesta['mensaje'] = "Usuario registrado con éxito, bienvenido a Titu {$usuarioNombre}";
                                     $respuesta['autenticar'] = True;
                                 } else {
                                     $respuesta['error'] = 1;

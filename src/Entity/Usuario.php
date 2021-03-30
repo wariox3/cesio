@@ -47,9 +47,14 @@ class Usuario
     private $correo;
 
     /**
-     * @ORM\Column(name="fecha_creacion", type="date", nullable=true)
+     * @ORM\Column(name="fecha_creacion", type="datetime", nullable=true)
      */
     private $fechaCreacion;
+
+    /**
+     * @ORM\Column(name="fecha_habilitacion", type="datetime", nullable=true)
+     */
+    private $fechaHabilitacion;
 
     /**
      * @return mixed

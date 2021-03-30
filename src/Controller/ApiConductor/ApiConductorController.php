@@ -21,29 +21,14 @@ class ApiConductorController extends FOSRestController
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-
         $arUsuario = $em->getRepository(Usuario::class)->findOneBy(array('usuario'=> $usuario, 'clave' => $clave));
-
         if($arUsuario) {
-            /**
-             * @idea validamos si el usuario tiene un cúpon
-             */
-            $arCupon = $em->getRepository(Cupon::class)->validarVigengia($arUsuario->getUsuario());
-            if(count($arCupon) > 0){
                 return [
                     'autenticar' => true,
                     'operador' => $arUsuario->getCodigoOperadorFk(),
-                    'cuponDias' => $arCupon[0]['dias'],
+                    'fechaHabilitacion'=>$arUsuario->getFechaHabilitacion(),
                     'mensaje' => "Correcto"
                 ];
-            }else{
-                return [
-                    'autenticar' => false,
-                    'mensaje' => "Cúpon vencido"
-                ];
-            }
-
-
         } else {
             return [
                 'autenticar' => false,
