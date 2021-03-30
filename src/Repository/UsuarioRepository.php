@@ -38,6 +38,8 @@ class UsuarioRepository extends ServiceEntityRepository
                                     $arUsuario->setClave($contrasena);
                                     $arUsuario->setUsuario($usuarioNombre);
                                     $arUsuario->setCodigoOperadorFk(trim($codigoOperador));
+                                    $arUsuario->setCelular($celular);
+                                    $arUsuario->setCorreo($correo);
                                     $em->persist($arUsuario);
                                     $em->flush();
                                     $respuesta['mensaje'] = "Usuario registrado con éxito, bienvenido a Titu {$usuarioNombre}";
