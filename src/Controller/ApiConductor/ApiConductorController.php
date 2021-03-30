@@ -21,14 +21,20 @@ class ApiConductorController extends FOSRestController
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(array('usuario'=> $usuario, 'clave' => $clave));
-        if($arUsuario) {
-                return [
-                    'autenticar' => true,
-                    'operador' => $arUsuario->getCodigoOperadorFk(),
-                    'fechaHabilitacion'=>$arUsuario->getFechaHabilitacion(),
-                    'mensaje' => "Correcto"
-                ];
+        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(array('usuario' => $usuario, 'clave' => $clave));
+        if ($arUsuario) {
+            $habilitado = true;
+            $fechaActual = new \DateTime('now');
+            if ($arUsuario->getFechaHabilitacion() < $fechaActual) {
+                $habilitado = false;
+            }
+            return [
+                'autenticar' => true,
+                'operador' => $arUsuario->getCodigoOperadorFk(),
+                'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
+                'estadoHabilitado' => $habilitado,
+                'mensaje' => "Correcto"
+            ];
         } else {
             return [
                 'autenticar' => false,
@@ -46,7 +52,7 @@ class ApiConductorController extends FOSRestController
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/despacho/$codigoDespacho");
@@ -54,7 +60,7 @@ class ApiConductorController extends FOSRestController
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         $arrGuias = json_decode($response, true);
-        if($arrGuias['error']) {
+        if ($arrGuias['error']) {
             return [];
         } else {
             return $arrGuias['guias'];
@@ -70,7 +76,7 @@ class ApiConductorController extends FOSRestController
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/entrega/$codigoGuia/$fecha/$hora/$usuario");
@@ -103,7 +109,7 @@ class ApiConductorController extends FOSRestController
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $contenido = json_decode($request->getContent(),true);
+        $contenido = json_decode($request->getContent(), true);
         $strImagen = $contenido['imageString'];
         $Base64Img = base64_decode($strImagen);
         file_put_contents('/bandeja/unodepiera.jpg', $Base64Img);
@@ -119,7 +125,7 @@ class ApiConductorController extends FOSRestController
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $arOperador =$em->getRepository(Operador::class)->find($codigoOperador);
+        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
         $direccion = $arOperador->getUrlServicio();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/novedad/$codigoGuia/$fecha/$hora/$usuario/$codigoNovedad");
@@ -133,12 +139,13 @@ class ApiConductorController extends FOSRestController
     /**
      * @Rest\Post("/api/conductor/despacho/ubicacion", name="api_conductor_despacho_ubicacion")
      */
-    public function ubicacion(Request $request) {
+    public function ubicacion(Request $request)
+    {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            $operador = $raw['operador']??null;
-            $arOperador =$em->getRepository(Operador::class)->find($operador);
+            $operador = $raw['operador'] ?? null;
+            $arOperador = $em->getRepository(Operador::class)->find($operador);
             $direccion = $arOperador->getUrlServicio();
             $data_string = json_encode($raw);
             $curl = curl_init();
@@ -150,7 +157,7 @@ class ApiConductorController extends FOSRestController
                 CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/despacho/ubicacion",
                 CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
-                    'Content-Length: ' .strlen($data_string))
+                    'Content-Length: ' . strlen($data_string))
             ]);
             $resp = json_decode(curl_exec($curl), true);
             curl_close($curl);
@@ -165,12 +172,13 @@ class ApiConductorController extends FOSRestController
     /**
      * @Rest\Post("/api/conductor/guia/cumplido", name="api_conductor_guia_cumplido")
      */
-    public function cumplido(Request $request) {
+    public function cumplido(Request $request)
+    {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            $operador = $raw['operador']??null;
-            $arOperador =$em->getRepository(Operador::class)->find($operador);
+            $operador = $raw['operador'] ?? null;
+            $arOperador = $em->getRepository(Operador::class)->find($operador);
             $direccion = $arOperador->getUrlServicio();
             $data_string = json_encode($raw);
             $curl = curl_init();
@@ -182,7 +190,7 @@ class ApiConductorController extends FOSRestController
                 CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/guia/entrega",
                 CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
-                    'Content-Length: ' .strlen($data_string))
+                    'Content-Length: ' . strlen($data_string))
             ]);
             $resp = json_decode(curl_exec($curl), true);
             curl_close($curl);
@@ -197,12 +205,13 @@ class ApiConductorController extends FOSRestController
     /**
      * @Rest\Post("/api/novedadtipo/lista", name="api_novedadtipo_lista")
      */
-    public function novedadLista(Request $request) {
+    public function novedadLista(Request $request)
+    {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            $operador = $raw['operador']??null;
-            $arOperador =$em->getRepository(Operador::class)->find($operador);
+            $operador = $raw['operador'] ?? null;
+            $arOperador = $em->getRepository(Operador::class)->find($operador);
             $direccion = $arOperador->getUrlServicio();
             $curl = curl_init();
             curl_setopt_array($curl, [
@@ -232,7 +241,7 @@ class ApiConductorController extends FOSRestController
             $respuesta = $em->getRepository(Usuario::class)->apiNuevo($raw);
             return $respuesta;
         } catch (\Exception $e) {
-            return  ['error' => 1, 'mensaje' =>  "Ocurrio un error en la api " . $e->getMessage(), 'autenticar' => false ];
+            return ['error' => 1, 'mensaje' => "Ocurrio un error en la api " . $e->getMessage(), 'autenticar' => false];
         }
     }
 
@@ -247,7 +256,7 @@ class ApiConductorController extends FOSRestController
             $respuesta = $em->getRepository(Usuario::class)->apiCambiarContrasena($raw);
             return $respuesta;
         } catch (\Exception $e) {
-            return  ['error' => 1, 'mensaje' =>  "Ocurrio un error en la api " . $e->getMessage(), ];
+            return ['error' => 1, 'mensaje' => "Ocurrio un error en la api " . $e->getMessage(),];
         }
     }
 
