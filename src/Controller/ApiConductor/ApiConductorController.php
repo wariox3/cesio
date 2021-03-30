@@ -3,6 +3,7 @@
 namespace App\Controller\ApiConductor;
 
 
+use App\Entity\Cupon;
 use App\Entity\Operador;
 use App\Entity\Usuario;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -22,12 +23,27 @@ class ApiConductorController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
 
         $arUsuario = $em->getRepository(Usuario::class)->findOneBy(array('usuario'=> $usuario, 'clave' => $clave));
+
         if($arUsuario) {
-            return [
-                'autenticar' => true,
-                'operador' => $arUsuario->getCodigoOperadorFk(),
-                'mensaje' => "Correcto"
-            ];
+            /**
+             * @idea validamos si el usuario tiene un cúpon
+             */
+            $arCupon = $em->getRepository(Cupon::class)->validarVigengia($arUsuario->getUsuario());
+            if(count($arCupon) > 0){
+                return [
+                    'autenticar' => true,
+                    'operador' => $arUsuario->getCodigoOperadorFk(),
+                    'cuponDias' => $arCupon[0]['dias'],
+                    'mensaje' => "Correcto"
+                ];
+            }else{
+                return [
+                    'autenticar' => false,
+                    'mensaje' => "Cúpon vencido"
+                ];
+            }
+
+
         } else {
             return [
                 'autenticar' => false,

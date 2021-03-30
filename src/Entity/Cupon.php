@@ -34,7 +34,7 @@ class Cupon
     private $dias = 0;
 
     /**
-     * @ORM\Column(name="fecha_apicacion", type="date", nullable=true)
+     * @ORM\Column(name="fecha_apicacion", type="datetime", nullable=true)
      */
     private $fechaApicacion;
 

@@ -15,8 +15,18 @@ class CuponRepository extends ServiceEntityRepository
         parent::__construct($registry, Cupon::class);
     }
 
-    public function generarCupon()
+    public function validarVigengia($nombreUsuario)
     {
-        return  bin2hex(random_bytes(4));
+        $fechaActual = new \DateTime('now');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(Cupon::class, 'c')
+            ->select('c.codigoCuponPk')
+            ->addSelect('c.dias')
+            ->addSelect('c.fechaApicacion')
+            ->where('c.estadoAplicado = 1')
+            ->andWhere("c.usuarioAplicado = '{$nombreUsuario}' ")
+            ->andWhere("c.fechaApicacion > '{$fechaActual->format('Y-m-d H:i:s')} 23:59:59'")
+            ->setMaxResults(1);
+        $arCupon = $queryBuilder->getQuery()->getResult();
+        return $arCupon;
     }
 }
