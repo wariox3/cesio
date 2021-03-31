@@ -109,7 +109,6 @@ class UsuarioRepository extends ServiceEntityRepository
         $respuesta = ['error' => 0, 'mensaje' => '',];
         $correoElectronico = $raw['correoElectronico'] ?? null;
         if ($correoElectronico){
-            dump($correoElectronico);
             $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['correo' => $correoElectronico]);
             $asunto = "Titu, recuperación de contraseña";
             $mensaje = "Hola usuario: {$arUsuario->getUsuario()}, clave es {$arUsuario->getClave()}";
