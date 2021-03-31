@@ -260,5 +260,20 @@ class ApiConductorController extends FOSRestController
         }
     }
 
+    /**
+     * @Rest\Post("/api/usuario/recuperarcontrasena", name="api_usuario_recuperarcontrasena")
+     */
+    public function recuperarcontrasena(Request $request)
+    {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $respuesta = $em->getRepository(Usuario::class)->apiRecuperarContrasena($raw);
+            return $respuesta;
+        } catch (\Exception $e) {
+            return ['error' => 1, 'mensaje' => "Ocurrio un error en la api " . $e->getMessage(),];
+        }
+    }
+
 
 }

@@ -102,4 +102,41 @@ class UsuarioRepository extends ServiceEntityRepository
 
         return $respuesta;
     }
+
+    public function apiRecuperarContrasena($raw)
+    {
+        $em = $this->getEntityManager();
+        $respuesta = ['error' => 0, 'mensaje' => '',];
+        $correoElectronico = $raw['correoElectronico'] ?? null;
+        if ($correoElectronico){
+            dump($correoElectronico);
+            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['correo' => $correoElectronico]);
+            $asunto = "Titu, recuperación de contraseña";
+            $mensaje = "Hola usuario: {$arUsuario->getUsuario()}, clave es {$arUsuario->getClave()}";
+
+            $datosJson = json_encode([
+                "correo" => $arUsuario->getCorreo(),
+                "asunto" => $asunto,
+                "contenido" => $mensaje
+            ]);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'http://104.248.81.122/dubnio/public/index.php/api/correo/enviar');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $datosJson);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($datosJson))
+            );
+            $respuesta = curl_exec($ch);
+            curl_close($ch);
+            $respuesta = json_decode($respuesta);
+            return $respuesta;
+        } else{
+            $respuesta['error'] = 1;
+            $respuesta['mensaje'] = "Usuario no existe ";
+        }
+        return $respuesta;
+
+    }
 }
