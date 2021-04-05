@@ -147,13 +147,11 @@ class UsuarioRepository extends ServiceEntityRepository
             if ($arUsuario) {
                 return [
                     'error' => false,
-                    'usuario' => [
-                        'codigoUsuario' => $arUsuario->getCodigoUsuarioPk(),
-                        'usuario' => $arUsuario->getUsuario(),
-                        'celular' => $arUsuario->getCelular(),
-                        'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
-                        'urlFoto' => $arUsuario->getUrlFoto()
-                    ]
+                    'codigoUsuario' => $arUsuario->getCodigoUsuarioPk(),
+                    'usuario' => $arUsuario->getUsuario(),
+                    'celular' => $arUsuario->getCelular(),
+                    'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
+                    'urlFoto' => $arUsuario->getUrlFoto()
                 ];
             } else {
                 return [
