@@ -19,7 +19,7 @@ class CuponRepository extends ServiceEntityRepository
     public function apiAplicar($raw) {
         $em = $this->getEntityManager();
         $cupon = $raw['cupon'] ?? null;
-        $usuario = $raw['usuario'] ?? null;
+        $usuario = $raw['codigoUsuario'] ?? null;
         if ($cupon && $usuario){
             $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
             if($arUsuario) {
