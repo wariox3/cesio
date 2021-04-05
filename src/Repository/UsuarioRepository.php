@@ -100,7 +100,7 @@ class UsuarioRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $usuario = $raw['usuario'] ?? null;
         if ($usuario){
-            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
             if ($arUsuario){
                 $asunto = "Titu, recuperación de contraseña";
                 $mensaje = "Usuario: {$arUsuario->getUsuario()}, su clave de ingreso es {$arUsuario->getClave()}";
