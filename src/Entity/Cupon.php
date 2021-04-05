@@ -13,8 +13,7 @@ class Cupon
 {
     /**
      * @ORM\Id()
-     * @ORM\Column(name="codigo_grupo_pk", type="string", length=8, unique=true)
-     * @Assert\Length( max = 10, maxMessage="El campo no puede contener más de 10 caracteres" )
+     * @ORM\Column(name="codigo_grupo_pk", type="string", length=30, unique=true)
      */
     private $codigoCuponPk;
 
@@ -63,7 +62,7 @@ class Cupon
     /**
      * @return bool
      */
-    public function isEstadoAplicado(): bool
+    public function getEstadoAplicado(): bool
     {
         return $this->estadoAplicado;
     }

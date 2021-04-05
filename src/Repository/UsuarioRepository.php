@@ -73,7 +73,7 @@ class UsuarioRepository extends ServiceEntityRepository
         $usuario = $raw['usuario'] ?? null;
         $contrasenaNueva = $raw['contrasena'] ?? null;
         if($usuario && $contrasenaNueva) {
-            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
             if ($arUsuario) {
                 $arUsuario->setClave($contrasenaNueva);
                 $em->persist($arUsuario);
@@ -98,15 +98,14 @@ class UsuarioRepository extends ServiceEntityRepository
     public function apiRecuperarContrasena($raw)
     {
         $em = $this->getEntityManager();
-        $respuesta = ['error' => 0, 'mensaje' => '',];
-        $correoElectronico = $raw['correoElectronico'] ?? null;
-        if ($correoElectronico){
-            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['correo' => $correoElectronico]);
+        $usuario = $raw['usuario'] ?? null;
+        if ($usuario){
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
             if ($arUsuario){
                 $asunto = "Titu, recuperación de contraseña";
-                $mensaje = "Hola usuario: {$arUsuario->getUsuario()}, su clave de ingreso es {$arUsuario->getClave()}";
+                $mensaje = "Usuario: {$arUsuario->getUsuario()}, su clave de ingreso es {$arUsuario->getClave()}";
                 $datosJson = json_encode([
-                    "correo" => $arUsuario->getCorreo(),
+                    "correo" => $usuario,
                     "asunto" => $asunto,
                     "contenido" => $mensaje
                 ]);
@@ -121,17 +120,21 @@ class UsuarioRepository extends ServiceEntityRepository
                 );
                 $respuestaApiDubnio = curl_exec($ch);
                 curl_close($ch);
-                $respuesta = array_merge($respuesta, (array)json_decode($respuestaApiDubnio));
-                return $respuesta;
+                return [
+                    'error' => false
+                ];
             } else{
-                $respuesta['error'] = 1;
-                $respuesta['mensaje'] = "Usuario no existe ";
+                return [
+                    'error' => true,
+                    'errorMensaje' => "El usuario no existe"
+                ];
             }
         } else{
-            $respuesta['error'] = 1;
-            $respuesta['mensaje'] = "Debe ingresar un correo";
+            return [
+                'error' => true,
+                'errorMensaje' => "Faltan datos para el consumo de la api"
+            ];
         }
-        return $respuesta;
 
     }
 }

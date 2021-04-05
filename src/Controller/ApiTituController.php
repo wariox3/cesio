@@ -31,6 +31,7 @@ class ApiTituController extends FOSRestController
                 return [
                     'error' => false,
                     'autenticar' => true,
+                    'codigoUsuarioPk' => $arUsuario->getCodigoUsuarioPk(),
                     'operador' => $arUsuario->getCodigoOperadorFk(),
                     'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
                     'estadoHabilitado' => $habilitado
@@ -77,14 +78,21 @@ class ApiTituController extends FOSRestController
      */
     public function recuperarcontrasena(Request $request)
     {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
-            $respuesta = $em->getRepository(Usuario::class)->apiRecuperarContrasena($raw);
-            return $respuesta;
-        } catch (\Exception $e) {
-            return ['error' => 1, 'mensaje' => "Ocurrio un error en la api " . $e->getMessage(),];
-        }
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $respuesta = $em->getRepository(Usuario::class)->apiRecuperarContrasena($raw);
+        return $respuesta;
+    }
+
+    /**
+     * @Rest\Post("/api/titu/cupon/aplicar", name="api_titu_cupon_aplicar")
+     */
+    public function cuponAplicar(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $respuesta = $em->getRepository(Cupon::class)->apiAplicar($raw);
+        return $respuesta;
     }
 
 

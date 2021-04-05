@@ -44,7 +44,7 @@ class Usuario
     private $fechaCreacion;
 
     /**
-     * @ORM\Column(name="fecha_habilitacion", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha_habilitacion", type="date", nullable=true)
      */
     private $fechaHabilitacion;
 
