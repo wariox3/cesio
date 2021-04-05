@@ -31,7 +31,7 @@ class ApiTituController extends FOSRestController
                 return [
                     'error' => false,
                     'autenticar' => true,
-                    'codigoUsuarioPk' => $arUsuario->getCodigoUsuarioPk(),
+                    'codigoUsuario' => $arUsuario->getCodigoUsuarioPk(),
                     'operador' => $arUsuario->getCodigoOperadorFk(),
                     'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
                     'estadoHabilitado' => $habilitado

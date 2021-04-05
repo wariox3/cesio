@@ -70,7 +70,7 @@ class UsuarioRepository extends ServiceEntityRepository
     public function apiCambiarContrasena($raw)
     {
         $em = $this->getEntityManager();
-        $usuario = $raw['usuario'] ?? null;
+        $usuario = $raw['codigoUsuario'] ?? null;
         $contrasenaNueva = $raw['contrasena'] ?? null;
         if($usuario && $contrasenaNueva) {
             $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
