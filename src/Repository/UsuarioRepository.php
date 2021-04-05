@@ -21,10 +21,9 @@ class UsuarioRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $fechaActual = new \DateTime('now');
         $usuario = $raw['usuario'] ?? null;
-        $operador = $raw['operador'] ?? null;
         $contrasena = $raw['contrasena'] ?? null;
         $celular = $raw['celular'] ?? null;
-        if ($usuario && $operador && $contrasena && $celular) {
+        if ($usuario && $contrasena && $celular) {
             if (filter_var($usuario, FILTER_VALIDATE_EMAIL)) {
                 if (is_numeric($celular)) {
                     $arUsuario = $em->getRepository(Usuario::class)->findBy(['usuario' => $usuario]);
@@ -35,7 +34,6 @@ class UsuarioRepository extends ServiceEntityRepository
                         $arUsuario->setCelular($celular);
                         $arUsuario->setFechaCreacion($fechaActual);
                         $arUsuario->setFechaHabilitacion($fechaActual);
-                        $arUsuario->setCodigoOperadorFk($operador);
                         $em->persist($arUsuario);
                         $em->flush();
                         return [

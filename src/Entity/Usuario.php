@@ -19,11 +19,6 @@ class Usuario
     private $codigoUsuarioPk;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=false)
-     */
-    private $codigoOperadorFk;
-
-    /**
      * @ORM\Column(name="usuario", type="string", length=200, nullable=true)
      */
     private $usuario;
@@ -67,22 +62,6 @@ class Usuario
     public function setCodigoUsuarioPk($codigoUsuarioPk): void
     {
         $this->codigoUsuarioPk = $codigoUsuarioPk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoOperadorFk()
-    {
-        return $this->codigoOperadorFk;
-    }
-
-    /**
-     * @param mixed $codigoOperadorFk
-     */
-    public function setCodigoOperadorFk($codigoOperadorFk): void
-    {
-        $this->codigoOperadorFk = $codigoOperadorFk;
     }
 
     /**
