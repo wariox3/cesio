@@ -4,7 +4,6 @@ namespace App\Controller;
 
 
 use App\Entity\Cupon;
-use App\Entity\Operador;
 use App\Entity\Usuario;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -25,6 +24,7 @@ class ApiTituController extends FOSRestController
             if ($arUsuario) {
                 $habilitado = true;
                 $fechaActual = new \DateTime('now');
+                $fechaActual = date_create($fechaActual->format('Y-m-d'));
                 if ($arUsuario->getFechaHabilitacion() < $fechaActual) {
                     $habilitado = false;
                 }
