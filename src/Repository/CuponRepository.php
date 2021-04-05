@@ -27,7 +27,14 @@ class CuponRepository extends ServiceEntityRepository
                 if ($arCupon){
                     if(!$arCupon->getEstadoAplicado()) {
                         $dias = $arCupon->getDias();
-                        $stringFecha = $arUsuario->getFechaHabilitacion()->format('Y-m-d');
+                        $fechaActual = new \DateTime('now');
+                        $fechaActual = date_create($fechaActual->format('Y-m-d'));
+                        if($arUsuario->getFechaHabilitacion() < $fechaActual) {
+                            $fechaHabilitacion = $fechaActual;
+                        } else {
+                            $fechaHabilitacion = $arUsuario->getFechaHabilitacion();
+                        }
+                        $stringFecha = $fechaHabilitacion->format('Y-m-d');
                         $fechaHabilitacion = date_create($stringFecha);
                         $fechaHabilitacion->modify("+ " . (string)$dias . " day");
                         $arUsuario->setFechaHabilitacion($fechaHabilitacion);
@@ -39,7 +46,8 @@ class CuponRepository extends ServiceEntityRepository
                         $em->persist($arCupon);
                         $em->flush();
                         return [
-                            'error' => false
+                            'error' => false,
+                            'fechaHabilitacion' => $fechaHabilitacion
                         ];
                     } else {
                         return [
