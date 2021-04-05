@@ -85,6 +85,16 @@ class ApiTituController extends FOSRestController
     }
 
     /**
+     * @Rest\Post("/api/titu/usuario/perfil", name="api_titu_usuario_perfil")
+     */
+    public function perfil(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $respuesta = $em->getRepository(Usuario::class)->apiPerfil($raw);
+        return $respuesta;
+    }
+
+    /**
      * @Rest\Post("/api/titu/cupon/aplicar", name="api_titu_cupon_aplicar")
      */
     public function cuponAplicar(Request $request)

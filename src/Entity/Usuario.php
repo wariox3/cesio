@@ -49,6 +49,11 @@ class Usuario
     private $fechaHabilitacion;
 
     /**
+     * @ORM\Column(name="url_foto", type="string", length=500, nullable=true)
+     */
+    private $urlFoto;
+
+    /**
      * @return mixed
      */
     public function getCodigoUsuarioPk()
@@ -158,6 +163,22 @@ class Usuario
     public function setFechaHabilitacion($fechaHabilitacion): void
     {
         $this->fechaHabilitacion = $fechaHabilitacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrlFoto()
+    {
+        return $this->urlFoto;
+    }
+
+    /**
+     * @param mixed $urlFoto
+     */
+    public function setUrlFoto($urlFoto): void
+    {
+        $this->urlFoto = $urlFoto;
     }
 
 

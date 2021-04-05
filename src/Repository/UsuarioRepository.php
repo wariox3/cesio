@@ -137,4 +137,35 @@ class UsuarioRepository extends ServiceEntityRepository
         }
 
     }
+
+    public function apiPerfil($raw)
+    {
+        $em = $this->getEntityManager();
+        $usuario = $raw['codigoUsuario'] ?? null;
+        if($usuario) {
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+            if ($arUsuario) {
+                return [
+                    'error' => false,
+                    'usuario' => [
+                        'codigoUsuario' => $arUsuario->getCodigoUsuarioPk(),
+                        'usuario' => $arUsuario->getUsuario(),
+                        'celular' => $arUsuario->getCelular(),
+                        'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
+                        'urlFoto' => $arUsuario->getUrlFoto()
+                    ]
+                ];
+            } else {
+                return [
+                    'error' => true,
+                    'errorMensaje' => "No existe el usuario"
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'errorMensaje' => "Faltan datos para el consumo de la api"
+            ];
+        }
+    }
 }
