@@ -19,88 +19,80 @@ class UsuarioRepository extends ServiceEntityRepository
     public function apiNuevo($raw)
     {
         $em = $this->getEntityManager();
-        $respuesta = ['error' => 0, 'mensaje' => '', 'autenticar' => false];
-        $codigoOperador = $raw['codigoOperador'] ?? null;
-        $contrasena = $raw['contrasena'] ?? null;
-        $usuarioNombre = $raw['usuarioNombre'] ?? null;
-        $celular = $raw['celular'] ?? null;
-        $correo = $raw['correo'] ?? null;
         $fechaActual = new \DateTime('now');
-        if ($correo != null) {
-            if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        $usuario = $raw['usuario'] ?? null;
+        $operador = $raw['operador'] ?? null;
+        $contrasena = $raw['contrasena'] ?? null;
+        $celular = $raw['celular'] ?? null;
+        if ($usuario && $operador && $contrasena && $celular) {
+            if (filter_var($usuario, FILTER_VALIDATE_EMAIL)) {
                 if (is_numeric($celular)) {
-                    if ($codigoOperador) {
-                        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
-                        if ($arOperador) {
-                            $validarUsarioExistente = $em->getRepository(Usuario::class)->findBy(['usuario' => $usuarioNombre]);
-                            if ($validarUsarioExistente == null) {
-                                if (strlen($contrasena) >= 8) {
-                                    /**
-                                     * @IDEA: CREACIÓN DEL USUARIO
-                                     */
-                                    $arUsuario = new Usuario();
-                                    $arUsuario->setClave($contrasena);
-                                    $arUsuario->setUsuario($usuarioNombre);
-                                    $arUsuario->setCodigoOperadorFk(trim($codigoOperador));
-                                    $arUsuario->setCelular($celular);
-                                    $arUsuario->setCorreo($correo);
-                                    $arUsuario->setFechaCreacion($fechaActual);
-                                    $arUsuario->setFechaHabilitacion($fechaActual);
-                                    $em->persist($arUsuario);
-                                    $em->flush();
-                                    $respuesta['mensaje'] = "Usuario registrado con éxito, bienvenido a Titu {$usuarioNombre}";
-                                    $respuesta['autenticar'] = True;
-                                } else {
-                                    $respuesta['error'] = 1;
-                                    $respuesta['mensaje'] = "La contraseña tiene que tener  mínimo 8 caracteres, puede ser letras o número";
-                                }
-                            } else {
-                                $respuesta['error'] = 1;
-                                $respuesta['mensaje'] = "El usuario ya existe ";
-                            }
-                        } else {
-                            $respuesta['error'] = 1;
-                            $respuesta['mensaje'] = "El operador ingresado no existe";
-                        }
+                    $arUsuario = $em->getRepository(Usuario::class)->findBy(['usuario' => $usuario]);
+                    if (!$arUsuario) {
+                        $arUsuario = new Usuario();
+                        $arUsuario->setClave($contrasena);
+                        $arUsuario->setUsuario($usuario);
+                        $arUsuario->setCelular($celular);
+                        $arUsuario->setFechaCreacion($fechaActual);
+                        $arUsuario->setFechaHabilitacion($fechaActual);
+                        $arUsuario->setCodigoOperadorFk($operador);
+                        $em->persist($arUsuario);
+                        $em->flush();
+                        return [
+                            'error' => false
+                        ];
                     } else {
-                        $respuesta['error'] = 1;
-                        $respuesta['mensaje'] = "El operador no puede estar vacío";
+                        return [
+                            'error' => true,
+                            'errorMensaje' => "El usuario ya existe"
+                        ];
                     }
                 } else {
-                    $respuesta['error'] = 1;
-                    $respuesta['mensaje'] = "El número de celular ingresado no esta valido, solo numero";
+                    return [
+                        'error' => true,
+                        'errorMensaje' => "El celular debe ser un numero valido"
+                    ];
                 }
             } else {
-                $respuesta['error'] = 1;
-                $respuesta['mensaje'] = "Esta dirección de correo ($correo) es no es válida.";
+                return [
+                    'error' => true,
+                    'errorMensaje' => "El usuario debe ser un correo valido"
+                ];
             }
         } else {
-            $respuesta['error'] = 1;
-            $respuesta['mensaje'] = "El campo correo es obligatorio";
+            return [
+                'error' => true,
+                'errorMensaje' => "Faltan datos para el consumo de la api"
+            ];
         }
-
-        return $respuesta;
     }
 
     public function apiCambiarContrasena($raw)
     {
         $em = $this->getEntityManager();
-        $respuesta = ['error' => 0, 'mensaje' => '',];
-        $contrasenaNueva = $raw['contrasenaNueva'] ?? null;
-        $usuarioNombre = $raw['usuario'] ?? null;
-        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuarioNombre]);
-
-        if ($arUsuario) {
-            $arUsuario->setClave($contrasenaNueva);
-            $em->persist($arUsuario);
-            $em->flush();
-            $respuesta['mensaje'] = "Cambio de clave exitoso";
+        $usuario = $raw['usuario'] ?? null;
+        $contrasenaNueva = $raw['contrasena'] ?? null;
+        if($usuario && $contrasenaNueva) {
+            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
+            if ($arUsuario) {
+                $arUsuario->setClave($contrasenaNueva);
+                $em->persist($arUsuario);
+                $em->flush();
+                return [
+                    'error' => false
+                ];
+            } else {
+                return [
+                    'error' => true,
+                    'errorMensaje' => "No existe el usuario"
+                ];
+            }
         } else {
-            $respuesta['error'] = 1;
-            $respuesta['mensaje'] = "Usuario no existe ";
+            return [
+                'error' => true,
+                'errorMensaje' => "Faltan datos para el consumo de la api"
+            ];
         }
-
-        return $respuesta;
     }
 
     public function apiRecuperarContrasena($raw)

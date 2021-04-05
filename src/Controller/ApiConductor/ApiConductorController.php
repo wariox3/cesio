@@ -12,36 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ApiConductorController extends FOSRestController
 {
-    /**
-     * @Rest\Get("/api/conductor/autenticar/{usuario}/{clave}", name="api_conductor_autenticar")
-     */
-    public function autenticar(Request $request, $usuario, $clave)
-    {
-
-        set_time_limit(0);
-        ini_set("memory_limit", -1);
-        $em = $this->getDoctrine()->getManager();
-        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(array('usuario' => $usuario, 'clave' => $clave));
-        if ($arUsuario) {
-            $habilitado = true;
-            $fechaActual = new \DateTime('now');
-            if ($arUsuario->getFechaHabilitacion() < $fechaActual) {
-                $habilitado = false;
-            }
-            return [
-                'autenticar' => true,
-                'operador' => $arUsuario->getCodigoOperadorFk(),
-                'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
-                'estadoHabilitado' => $habilitado,
-                'mensaje' => "Correcto"
-            ];
-        } else {
-            return [
-                'autenticar' => false,
-                'mensaje' => "Datos errados"
-            ];
-        }
-    }
 
     /**
      * @Rest\Get("/api/conductor/despacho/guias/{codigoOperador}/{codigoDespacho}", name="api_conductor_despacho_guias")
@@ -229,51 +199,5 @@ class ApiConductorController extends FOSRestController
             ];
         }
     }
-
-    /**
-     * @Rest\Post("/api/usuario/nuevo", name="api_usuario_nuevo")
-     */
-    public function nuevoUsuario(Request $request)
-    {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
-            $respuesta = $em->getRepository(Usuario::class)->apiNuevo($raw);
-            return $respuesta;
-        } catch (\Exception $e) {
-            return ['error' => 1, 'mensaje' => "Ocurrio un error en la api " . $e->getMessage(), 'autenticar' => false];
-        }
-    }
-
-    /**
-     * @Rest\Post("/api/usuario/cambiarcontrasena", name="api_usuario_cambiarcontrasena")
-     */
-    public function cambiarContrasena(Request $request)
-    {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
-            $respuesta = $em->getRepository(Usuario::class)->apiCambiarContrasena($raw);
-            return $respuesta;
-        } catch (\Exception $e) {
-            return ['error' => 1, 'mensaje' => "Ocurrio un error en la api " . $e->getMessage(),];
-        }
-    }
-
-    /**
-     * @Rest\Post("/api/usuario/recuperarcontrasena", name="api_usuario_recuperarcontrasena")
-     */
-    public function recuperarcontrasena(Request $request)
-    {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
-            $respuesta = $em->getRepository(Usuario::class)->apiRecuperarContrasena($raw);
-            return $respuesta;
-        } catch (\Exception $e) {
-            return ['error' => 1, 'mensaje' => "Ocurrio un error en la api " . $e->getMessage(),];
-        }
-    }
-
 
 }
