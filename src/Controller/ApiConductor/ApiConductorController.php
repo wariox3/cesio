@@ -14,27 +14,55 @@ class ApiConductorController extends FOSRestController
 {
 
     /**
-     * @Rest\Get("/api/conductor/despacho/guias/{codigoOperador}/{codigoDespacho}", name="api_conductor_despacho_guias")
+     * @Rest\Get("/api/conductor/despacho/guias/{codigoDespacho}", name="api_conductor_despacho_guias")
      */
-    public function guia(Request $request, $codigoOperador, $codigoDespacho)
+    public function guia(Request $request, $codigoDespacho)
     {
 
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
-        $direccion = $arOperador->getUrlServicio();
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/despacho/$codigoDespacho");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = curl_exec($ch);
-        $arrGuias = json_decode($response, true);
-        if ($arrGuias['error']) {
-            return [];
+        $arrCadena = explode("-", $codigoDespacho);
+        if($arrCadena) {
+            if(count($arrCadena) == 3) {
+                $operador = $arrCadena[0];
+                $arOperador = $em->getRepository(Operador::class)->find($operador);
+                if($arOperador) {
+                    $codigo = $arrCadena[1];
+                    $token = $arrCadena[2];
+                    $direccion = $arOperador->getUrlServicio();
+                    //$direccion = "http://localhost/cromo/public/index.php";
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/despacho/$codigo/$token");
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    $response = curl_exec($ch);
+                    $arrGuias = json_decode($response, true);
+                    if ($arrGuias['error']) {
+                        return [];
+                    } else {
+                        return $arrGuias['guias'];
+                    }
+                } else {
+                    return [
+                        'error' => true,
+                        'errorMensaje' => 'No existe el operador'
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'errorMensaje' => 'La estructura del parametro es OP-NUMERO-TOKEN'
+                ];
+            }
         } else {
-            return $arrGuias['guias'];
+            return [
+                'error' => true,
+                'errorMensaje' => 'Faltan parametros para el consumo de la api'
+            ];
         }
+
+
     }
 
     /**
