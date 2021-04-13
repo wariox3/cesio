@@ -173,26 +173,34 @@ class ApiConductorController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             $operador = $raw['operador'] ?? null;
-            $arOperador = $em->getRepository(Operador::class)->find($operador);
-            $direccion = $arOperador->getUrlServicio();
-            $data_string = json_encode($raw);
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => $data_string,
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_POST => 1,
-                CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/guia/entrega",
-                CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($data_string))
-            ]);
-            $resp = json_decode(curl_exec($curl), true);
-            curl_close($curl);
-            return $resp;
+            if($operador) {
+                $arOperador = $em->getRepository(Operador::class)->find($operador);
+                $direccion = $arOperador->getUrlServicio();
+                $data_string = json_encode($raw);
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => $data_string,
+                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_POST => 1,
+                    CURLOPT_URL => $direccion . "/transporte/api/cesio/guia/entrega",
+                    CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                ]);
+                $resp = json_decode(curl_exec($curl), true);
+                curl_close($curl);
+                return $resp;
+            } else {
+                return [
+                    'error' => true,
+                    'errorMensaje' => "Faltan datos para la api",
+                ];
+            }
         } catch (\Exception $e) {
             return [
-                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+                'error' => true,
+                'errorMensaje' => $e->getMessage(),
             ];
         }
     }
