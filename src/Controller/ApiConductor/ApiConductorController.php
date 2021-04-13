@@ -25,7 +25,7 @@ class ApiConductorController extends FOSRestController
         $arrCadena = explode("-", $codigoDespacho);
         if($arrCadena) {
             if(count($arrCadena) == 3) {
-                $operador = $arrCadena[0];
+                $operador = strtolower($arrCadena[0]);
                 $arOperador = $em->getRepository(Operador::class)->find($operador);
                 if($arOperador) {
                     $codigo = $arrCadena[1];
@@ -38,6 +38,7 @@ class ApiConductorController extends FOSRestController
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                     $response = curl_exec($ch);
                     $respuesta = json_decode($response, true);
+                    $respuesta['operador'] = $operador;
                     return $respuesta;
                 } else {
                     return [
