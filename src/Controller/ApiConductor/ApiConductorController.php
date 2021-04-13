@@ -34,15 +34,11 @@ class ApiConductorController extends FOSRestController
                     //$direccion = "http://localhost/cromo/public/index.php";
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $direccion . "/transporte/api/app/guia/despacho/$codigo/$token");
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                     $response = curl_exec($ch);
-                    $arrGuias = json_decode($response, true);
-                    if ($arrGuias['error']) {
-                        return [];
-                    } else {
-                        return $arrGuias['guias'];
-                    }
+                    $respuesta = json_decode($response, true);
+                    return $respuesta;
                 } else {
                     return [
                         'error' => true,
