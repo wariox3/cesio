@@ -118,19 +118,32 @@ class ApiGuiaController extends FOSRestController
         $raw = json_decode($request->getContent(), true);
         $data_string = json_encode($raw);
         $codigoOperador = $raw['operador'] ?? null;
-        $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
-        $direccion = $arOperador->getUrlServicio();
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $data_string,
-            CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/novedad/nuevo",
-        ]);
-        $resp = json_decode(curl_exec($curl), true);
-        curl_close($curl);
-        return $resp;
-
+        if($codigoOperador) {
+            $arOperador = $em->getRepository(Operador::class)->find($codigoOperador);
+            if($arOperador) {
+                $direccion = $arOperador->getUrlServicio();
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => $data_string,
+                    CURLOPT_URL => $url = $direccion . "/transporte/api/cesio/novedad/nuevo",
+                ]);
+                $resp = json_decode(curl_exec($curl), true);
+                curl_close($curl);
+                return $resp;
+             } else {
+                return [
+                    'error' => true,
+                    'errorMensaje' => "El operador no existe"
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'errorMensaje' => "Faltan datos para el consumo de la api"
+            ];
+        }
     }
 
     }
