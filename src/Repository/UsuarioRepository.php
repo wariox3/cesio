@@ -33,7 +33,7 @@ class UsuarioRepository extends ServiceEntityRepository
                         $arUsuario->setUsuario($usuario);
                         $arUsuario->setCelular($celular);
                         $arUsuario->setFechaCreacion($fechaActual);
-                        $arUsuario->setFechaHabilitacion($fechaActual);
+                        $arUsuario->setFechaHabilitacion(date_create('2021-06-30'));
                         $em->persist($arUsuario);
                         $em->flush();
                         return [
