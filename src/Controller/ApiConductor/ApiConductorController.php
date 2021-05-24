@@ -63,6 +63,47 @@ class ApiConductorController extends FOSRestController
     }
 
     /**
+     * @Rest\Post("/api/conductor/despacho/entrega", name="api_conductor_despacho_entrega")
+     */
+    public function despachoEntrega(Request $request)
+    {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $operador = $raw['operador'] ?? null;
+            if($operador) {
+                $arOperador = $em->getRepository(Operador::class)->find($operador);
+                $direccion = $arOperador->getUrlServicio();
+                $data_string = json_encode($raw);
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => $data_string,
+                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_POST => 1,
+                    CURLOPT_URL => $direccion . "/api/transporte/despacho/entrega",
+                    CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                ]);
+                $resp = json_decode(curl_exec($curl), true);
+                curl_close($curl);
+                return $resp;
+            } else {
+                return [
+                    'error' => true,
+                    'errorMensaje' => "Faltan datos para el consumo de la api",
+                ];
+            }
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'errorMensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
      * @Rest\Get("/api/conductor/guia/entrega/{codigoOperador}/{codigoGuia}/{fecha}/{hora}/{usuario}", name="api_conductor_guia_entrega")
      */
     public function guiaEntrega(Request $request, $codigoOperador, $codigoGuia, $fecha, $hora, $usuario)
