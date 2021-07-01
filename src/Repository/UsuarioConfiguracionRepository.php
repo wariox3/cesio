@@ -55,16 +55,23 @@ class UsuarioConfiguracionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $usuario = $raw['codigoUsuario'] ?? null;
         if($usuario) {
-            $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(UsuarioConfiguracion::class, 'uc')
-                ->select("uc.codigoUsuarioConfiguracionPk")
-                ->addSelect("uc.calidaImagen")
-                ->where("uc.codigoUsuarioFk = {$usuario} ");
-
-            $resultado = $queryBuilder->getQuery()->getSingleResult();
-            return [
-                'error' => false,
-                'calidad'=> $resultado['calidaImagen']
-            ];
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+            if ($arUsuario) {
+                $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(UsuarioConfiguracion::class, 'uc')
+                    ->select("uc.codigoUsuarioConfiguracionPk")
+                    ->addSelect("uc.calidaImagen")
+                    ->where("uc.codigoUsuarioFk = {$usuario} ");
+                $resultado = $queryBuilder->getQuery()->getSingleResult();
+                return [
+                    'error' => false,
+                    'calidad'=> $resultado['calidaImagen']
+                ];
+            } else{
+                return [
+                    'error' => true,
+                    'errorMensaje' => "No existe el usuario"
+                ];
+            }
         } else {
             return [
                 'error' => true,
