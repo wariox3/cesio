@@ -16,7 +16,7 @@ class UsuarioConfiguracionRepository extends ServiceEntityRepository
         parent::__construct($registry, UsuarioConfiguracion::class);
     }
 
-    public function apiCalidadImagen($raw)
+    public function apiCalidadImagenNueva($raw)
     {
         $em = $this->getEntityManager();
         $usuario = $raw['codigoUsuario'] ?? null;
@@ -42,6 +42,26 @@ class UsuarioConfiguracionRepository extends ServiceEntityRepository
                     'errorMensaje' => "No existe el usuario"
                 ];
             }
+        } else {
+            return [
+                'error' => true,
+                'errorMensaje' => "Faltan datos para el consumo de la api"
+            ];
+        }
+    }
+
+    public function apiCalidadImagenLista($raw)
+    {
+        $em = $this->getEntityManager();
+        $usuario = $raw['codigoUsuario'] ?? null;
+        if($usuario) {
+            $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(UsuarioConfiguracion::class, 'uc')
+                ->select("uc.codigoUsuarioConfiguracionPk")
+                ->addSelect("uc.calidaImagen")
+                ->where("uc.codigoUsuarioFk = {$usuario} ");
+
+            $resultado = $queryBuilder->getQuery()->getSingleResult();
+            return $resultado;
         } else {
             return [
                 'error' => true,
