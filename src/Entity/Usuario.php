@@ -49,6 +49,11 @@ class Usuario
     private $urlFoto;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UsuarioConfiguracion", mappedBy="usuarioRel")
+     */
+    protected $usuariosUsuarioConfiguracionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoUsuarioPk()
@@ -158,6 +163,22 @@ class Usuario
     public function setUrlFoto($urlFoto): void
     {
         $this->urlFoto = $urlFoto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuariosUsuarioConfiguracionRel()
+    {
+        return $this->usuariosUsuarioConfiguracionRel;
+    }
+
+    /**
+     * @param mixed $usuariosUsuarioConfiguracionRel
+     */
+    public function setUsuariosUsuarioConfiguracionRel($usuariosUsuarioConfiguracionRel): void
+    {
+        $this->usuariosUsuarioConfiguracionRel = $usuariosUsuarioConfiguracionRel;
     }
 
 

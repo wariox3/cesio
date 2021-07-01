@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Cupon;
 use App\Entity\Usuario;
+use App\Entity\UsuarioConfiguracion;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,5 +105,15 @@ class ApiTituController extends FOSRestController
         return $respuesta;
     }
 
+    /**
+     * @Rest\Post("/api/titu/usuario/imagencalidad", name="api_titu_usuario_imagencalidad")
+     */
+    public function asignarCalidadImagen(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $respuesta = $em->getRepository(UsuarioConfiguracion::class)->apiCalidadImagen($raw);
+        return $respuesta;
+    }
 
 }
