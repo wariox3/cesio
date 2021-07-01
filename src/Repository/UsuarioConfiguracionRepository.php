@@ -61,7 +61,10 @@ class UsuarioConfiguracionRepository extends ServiceEntityRepository
                 ->where("uc.codigoUsuarioFk = {$usuario} ");
 
             $resultado = $queryBuilder->getQuery()->getSingleResult();
-            return $resultado;
+            return [
+                'error' => false,
+                'calidad'=> $resultado['calidaImagen']
+            ];
         } else {
             return [
                 'error' => true,
