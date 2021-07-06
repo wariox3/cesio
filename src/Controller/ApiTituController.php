@@ -118,4 +118,14 @@ class ApiTituController extends FOSRestController
         return $respuesta;
     }
 
+    /**
+     * @Rest\Post("/api/titu/usuario/imagencalidad", name="api_titu_usuario_imagencalidad")
+     */
+    public function asignarCalidadImagen(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $respuesta = $em->getRepository(UsuarioConfiguracion::class)->apiActualizarCalidadImagen($raw);
+        return $respuesta;
+    }
 }
