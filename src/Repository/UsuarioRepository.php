@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Cupon;
 use App\Entity\Operador;
 use App\Entity\Usuario;
+use App\Entity\UsuarioConfiguracion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use phpDocumentor\Reflection\Types\True_;
@@ -35,6 +36,11 @@ class UsuarioRepository extends ServiceEntityRepository
                         $arUsuario->setFechaCreacion($fechaActual);
                         $arUsuario->setFechaHabilitacion(date_create('2021-10-31'));
                         $em->persist($arUsuario);
+
+                        $arUsuarioConfiguracion = new UsuarioConfiguracion();
+                        $arUsuarioConfiguracion->setCodigoUsuarioConfiguracionPk($usuario);
+                        $em->persist($arUsuarioConfiguracion);
+
                         $em->flush();
                         return [
                             'error' => false

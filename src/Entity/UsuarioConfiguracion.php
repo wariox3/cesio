@@ -13,26 +13,14 @@ class UsuarioConfiguracion
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_usuario_configuracion_pk", type="string", length=200, nullable=true)
      */
     private $codigoUsuarioConfiguracionPk;
 
     /**
-     * @ORM\Column(name="calida_imagen", type="string", options={"default":"baja"})
+     * @ORM\Column(name="calida_imagen", type="string", length=10, options={"default":"bajo"})
      */
-    private $calidaImagen;
-
-    /**
-     * @ORM\Column(name="codigo_usuario_fk", type="integer")
-     */
-    private $codigoUsuarioFk;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Usuario", inversedBy="usuariosUsuarioConfiguracionRel")
-     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="codigo_usuario_pk")
-     */
-    protected $usuarioRel;
+    private $calidaImagen = 'bajo';
 
     /**
      * @return mixed
@@ -64,38 +52,6 @@ class UsuarioConfiguracion
     public function setCalidaImagen($calidaImagen): void
     {
         $this->calidaImagen = $calidaImagen;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoUsuarioFk()
-    {
-        return $this->codigoUsuarioFk;
-    }
-
-    /**
-     * @param mixed $codigoUsuarioFk
-     */
-    public function setCodigoUsuarioFk($codigoUsuarioFk): void
-    {
-        $this->codigoUsuarioFk = $codigoUsuarioFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsuarioRel()
-    {
-        return $this->usuarioRel;
-    }
-
-    /**
-     * @param mixed $usuarioRel
-     */
-    public function setUsuarioRel($usuarioRel): void
-    {
-        $this->usuarioRel = $usuarioRel;
     }
 
 

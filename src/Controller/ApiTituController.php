@@ -29,12 +29,14 @@ class ApiTituController extends FOSRestController
                 if ($arUsuario->getFechaHabilitacion() < $fechaActual) {
                     $habilitado = false;
                 }
+                $arUsuarioConfiguracion = $em->getRepository(UsuarioConfiguracion::class)->lista($usuario);
                 return [
                     'error' => false,
                     'autenticar' => true,
                     'codigoUsuario' => $arUsuario->getCodigoUsuarioPk(),
                     'fechaHabilitacion' => $arUsuario->getFechaHabilitacion(),
-                    'estadoHabilitado' => $habilitado
+                    'estadoHabilitado' => $habilitado,
+                    'configuracion' => $arUsuarioConfiguracion
                 ];
             } else {
                 return [
@@ -106,24 +108,13 @@ class ApiTituController extends FOSRestController
     }
 
     /**
-     * @Rest\Post("/api/titu/usuario/imagencalidad/nuevo", name="api_titu_usuario_imagencalidad/nuevo")
-     */
-    public function asignarCalidadImagen(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $raw = json_decode($request->getContent(), true);
-        $respuesta = $em->getRepository(UsuarioConfiguracion::class)->apiCalidadImagenNueva($raw);
-        return $respuesta;
-    }
-
-    /**
-     * @Rest\Post("/api/titu/usuario/imagencalidad/lista", name="api_titu_usuario_imagencalidad_lista")
+     * @Rest\Post("/api/titu/usuario/configuracion/lista", name="api_titu_usuario_configuracion_lista")
      */
     public function consultarCalidadImagen(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $raw = json_decode($request->getContent(), true);
-        $respuesta = $em->getRepository(UsuarioConfiguracion::class)->apiCalidadImagenLista($raw);
+        $respuesta = $em->getRepository(UsuarioConfiguracion::class)->apiConfiguracionLista($raw);
         return $respuesta;
     }
 
