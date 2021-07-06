@@ -19,7 +19,7 @@ class UsuarioConfiguracionRepository extends ServiceEntityRepository
     public function lista($usuario)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(UsuarioConfiguracion::class, 'uc')
-            ->select("uc.calidaImagen")
+            ->select("uc.calidadImagen")
             ->where("uc.codigoUsuarioConfiguracionPk = '{$usuario}' ");
         $arConfuraciones = $queryBuilder->getQuery()->getArrayResult();
         return $arConfuraciones;
