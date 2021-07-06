@@ -18,9 +18,9 @@ class UsuarioConfiguracion
     private $codigoUsuarioConfiguracionPk;
 
     /**
-     * @ORM\Column(name="calida_imagen", type="string", length=10, options={"default":"bajo"})
+     * @ORM\Column(name="calidad_imagen", type="string", length=10, options={"default":"BAJO"})
      */
-    private $calidaImagen = 'bajo';
+    private $calidadImagen = 'BAJO';
 
     /**
      * @return mixed
@@ -39,22 +39,19 @@ class UsuarioConfiguracion
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCalidaImagen()
+    public function getCalidadImagen(): string
     {
-        return $this->calidaImagen;
+        return $this->calidadImagen;
     }
 
     /**
-     * @param mixed $calidaImagen
+     * @param string $calidadImagen
      */
-    public function setCalidaImagen($calidaImagen): void
+    public function setCalidadImagen(string $calidadImagen): void
     {
-        $this->calidaImagen = $calidaImagen;
+        $this->calidadImagen = $calidadImagen;
     }
-
-
-
 
 }

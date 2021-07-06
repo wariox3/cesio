@@ -25,8 +25,68 @@ class UsuarioConfiguracionRepository extends ServiceEntityRepository
         return $arConfuraciones;
     }
 
+//    public function apiConfiguracionLista($raw)
+//    {
+//        $em = $this->getEntityManager();
+//        $usuario = $raw['codigoUsuario'] ?? null;
+//        if($usuario) {
+//            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+//            if ($arUsuario) {
+//                $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(UsuarioConfiguracion::class, 'uc')
+//                    ->select("uc.codigoUsuarioConfiguracionPk")
+//                    ->addSelect("uc.calidaImagen")
+//                    ->where("uc.codigoUsuarioFk = {$usuario} ");
+//                $resultado = $queryBuilder->getQuery()->getSingleResult();
+//                return [
+//                    'error' => false,
+//                    'calidad'=> $resultado['calidaImagen']
+//                ];
+//            } else{
+//                return [
+//                    'error' => true,
+//                    'errorMensaje' => "No existe el usuario"
+//                ];
+//            }
+//        } else {
+//            return [
+//                'error' => true,
+//                'errorMensaje' => "Faltan datos para el consumo de la api"
+//            ];
+//        }
+//    }
 
-
-
+    public function apiActualozarCalidadImagen($raw)
+    {
+        $em = $this->getEntityManager();
+        $usuario = $raw['codigoUsuario'] ?? null;
+        $calidaImagen = $raw['calidaImagen'] ?? null;
+        if($usuario) {
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+            if ($arUsuario) {
+                $arUsuarioConfiguracion = $em->getRepository(UsuarioConfiguracion::class)->findOneBy(['codigoUsuarioFk'=>$usuario]);
+                if($arUsuarioConfiguracion == null){
+                    $arUsuarioConfiguracion = new UsuarioConfiguracion();
+                    $arUsuarioConfiguracion->setUsuarioRel($arUsuario);
+                }
+                $arUsuarioConfiguracion->setCalidaImagen($calidaImagen);
+                $em->persist($arUsuarioConfiguracion);
+                $em->flush();
+                return [
+                    'error' => false,
+                    'errorMensaje' => "Se asigno la configuración de manera correcta"
+                ];
+            } else {
+                return [
+                    'error' => true,
+                    'errorMensaje' => "No existe el usuario"
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'errorMensaje' => "Faltan datos para el consumo de la api"
+            ];
+        }
+    }
 
 }
